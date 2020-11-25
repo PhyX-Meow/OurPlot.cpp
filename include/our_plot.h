@@ -11,18 +11,7 @@ struct poi {
     poi polar(double r, double th);
 };
 
-class canvas_2d {
-    std::vector<std::vector<pix>> data;
-    void modify_color(double x, double y, pix color);
-};
-
-class line {
-    poi x;
-    poi y;
-    pix color;
-    canvas_2d &operator<<(canvas_2d &canvas);
-};
-
+class canvas_2d;
 class func_1var {
 };
 
