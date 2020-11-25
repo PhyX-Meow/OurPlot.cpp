@@ -9,5 +9,5 @@ struct pix {
     col b;
 };
 
-int write(std::vector<std::vector<pix>>, const char filename[]);
-int read(std::vector<std::vector<pix>>, const char filename[]);
+int write(std::vector<std::vector<pix>> &data, const char filename[]);
+int read(std::vector<std::vector<pix>> &data, const char filename[]);

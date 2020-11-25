@@ -1,0 +1,1 @@
+g++ -O2 -Wall -std=c++20 ./src/* -o test.exe
