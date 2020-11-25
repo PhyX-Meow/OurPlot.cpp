@@ -1,5 +1,4 @@
-#include <iostream>
-#include <vector>
-#include <array>
+#include "bmp_io.h"
+#include <algorithm>
 #include <cstring>
-#include <string>
+#include <vector>
