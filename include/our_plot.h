@@ -18,8 +18,8 @@ class canvas_2d {
 
 class line {
     poi x;
-    poi y;
-    pix color;
+    pix cl;
+    pix co;
     canvas_2d &operator<<(canvas_2d &canvas);
 };
 
