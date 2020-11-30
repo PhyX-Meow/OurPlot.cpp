@@ -1,13 +1,17 @@
+#ifndef _BMP_IO_
+#define _BMP_IO_
+
+#include "our_plot.h"
 #include <fstream>
-#include <vector>
 
-using col = unsigned char;
-
-struct pix {
-    col r;
-    col g;
-    col b;
+struct bmp_head {
 };
 
-int write(std::vector<std::vector<pix>> &data, const char filename[]);
-int read(std::vector<std::vector<pix>> &data, const char filename[]);
+struct dib_head {
+};
+
+/* BMP 读写 数组按先行后列，从左下到右上表示图像数据 */
+int bmp_write(std::vector<std::vector<pix>> &data, const char filename[]);
+int bmp_read(std::vector<std::vector<pix>> &data, const char filename[]);
+
+#endif
