@@ -75,7 +75,9 @@ class canvas_2d {
         return data[0].size();
     }
     void draw_line(point ini, point end, pix color);
-
+    bool range_check(pix_pos pixx) {
+        return (pixx.clm < width()) && (pixx.clm >= 0) && (pixx.row < height()) && (pixx.row >= 0);
+    }
     range x;
     range y;
     pix_pos origin;
@@ -85,12 +87,42 @@ class canvas_2d {
     pix_pos to_pix(point p);
 };
 class func_1var {
+  public:
+    func_1var(double (*func_)(double), double precis_, pix color_, canvas_2d target_canvas) {
+        func = func_;
+        precis = precis_;
+        color = color_;
+        draw(target_canvas);
+    }
+    void draw(canvas_2d target_canvas);
+
+  private:
+    double (*func)(double);
+    double precis;
+    pix color;
 };
 
 class func_polar {
 };
 
 class func_para {
+  public: //end_cnt is just for test;
+    func_para(double (*func_x_)(double), double (*func_y_)(double), double precis_, pix color_, canvas_2d target_canvas, int end_cnt_) {
+        func_x = func_x_;
+        func_y = func_y_;
+        precis = precis_;
+        color = color_;
+        draw(target_canvas);
+        end_cnt = end_cnt_;
+    }
+    void draw(canvas_2d target_canvas);
+
+  private:
+    double (*func_x)(double);
+    double (*func_y)(double);
+    double precis;
+    pix color;
+    int end_cnt;
 };
 
 class axes {
