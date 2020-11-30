@@ -60,20 +60,24 @@ void func_1var::draw(canvas_2d target_canvas) {
 }
 void func_para::draw(canvas_2d target_canvas) {
     double para{precis};
+    int cnt{0};
     point ini{func_x(0), func_y(0)}, end{func_x(precis), func_y(precis)};
-    while (target_canvas.range_check(target_canvas.to_pix(end))) {
+    while (target_canvas.range_check(target_canvas.to_pix(end)) && cnt <= end_cnt) {
         target_canvas.draw_line(ini, end, color);
         ini = end;
         para += precis;
         end = {func_x(para), func_y(para)};
+        cnt++;
     }
     ini = {func_x(0), func_y(0)};
     end = {func_x(-precis), func_y(-precis)};
     para = -precis;
-    while (target_canvas.range_check(target_canvas.to_pix(end))) {
+    cnt = 0;
+    while (target_canvas.range_check(target_canvas.to_pix(end)) && cnt <= end_cnt) {
         target_canvas.draw_line(ini, end, color);
         ini = end;
         para -= precis;
         end = {func_x(para), func_y(para)};
+        cnt++;
     }
 }
