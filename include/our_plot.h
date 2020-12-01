@@ -75,8 +75,8 @@ class canvas_2d {
         return data[0].size();
     }
     void draw_line(point ini, point end, pix color);
-    bool range_check(pix_pos pixx) {
-        return (pixx.clm < width()) && (pixx.clm >= 0) && (pixx.row < height()) && (pixx.row >= 0);
+    bool contains(pix_pos pos) {
+        return (pos.clm < width()) && (pos.clm >= 0) && (pos.row < height()) && (pos.row >= 0);
     }
     range x;
     range y;
@@ -88,13 +88,12 @@ class canvas_2d {
 };
 class func_1var {
   public:
-    func_1var(double (*func_)(double), double precis_, pix color_, canvas_2d target_canvas) {
+    func_1var(double (*func_)(double), double precis_, pix color_) {
         func = func_;
         precis = precis_;
         color = color_;
-        draw(target_canvas);
     }
-    void draw(canvas_2d target_canvas);
+    void draw_to(canvas_2d target);
 
   private:
     double (*func)(double);
@@ -107,15 +106,14 @@ class func_polar {
 
 class func_para {
   public: //end_cnt is just for test;
-    func_para(double (*func_x_)(double), double (*func_y_)(double), double precis_, pix color_, canvas_2d target_canvas, int end_cnt_) {
+    func_para(double (*func_x_)(double), double (*func_y_)(double), double precis_, pix color_, int end_cnt_) {
         func_x = func_x_;
         func_y = func_y_;
         precis = precis_;
         color = color_;
-        draw(target_canvas);
         end_cnt = end_cnt_;
     }
-    void draw(canvas_2d target_canvas);
+    void draw_to(canvas_2d target);
 
   private:
     double (*func_x)(double);

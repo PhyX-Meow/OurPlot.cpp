@@ -26,7 +26,7 @@ void canvas_2d::draw_line(point ini, point end, pix color) {
         for (int i = start.clm; i <= ending.clm; ++i) {
             double t = to_point({origin.row, i}).x;
             double h = slope * (t - ini.x) + ini.y;
-            if (range_check(to_pix({t, h})))
+            if (contains(to_pix({t, h})))
                 (*this)[to_pix({t, h})] = color;
         }
     } else {
@@ -36,34 +36,34 @@ void canvas_2d::draw_line(point ini, point end, pix color) {
         for (int i = start.row; i <= ending.row; ++i) {
             double t = to_point({i, origin.clm}).y;
             double h = slope * (t - ini.y) + ini.x;
-            if (range_check(to_pix({h, t})))
+            if (contains(to_pix({h, t})))
                 (*this)[to_pix({h, t})] = color;
         }
     }
 }
-void func_1var::draw(canvas_2d target_canvas) {
+void func_1var::draw_to(canvas_2d target) {
     point ini{0, func(0)}, end{precis, func(precis)};
-    while (target_canvas.range_check(target_canvas.to_pix(end))) {
-        target_canvas.draw_line(ini, end, color);
+    while (target.contains(target.to_pix(end))) {
+        target.draw_line(ini, end, color);
         ini = end;
         end.x += precis;
         end.y = func(end.x);
     }
     ini = {0, func(0)};
     end = {-precis, func(-precis)};
-    while (target_canvas.range_check(target_canvas.to_pix(end))) {
-        target_canvas.draw_line(ini, end, color);
+    while (target.contains(target.to_pix(end))) {
+        target.draw_line(ini, end, color);
         ini = end;
         end.x -= precis;
         end.y = func(end.x);
     }
 }
-void func_para::draw(canvas_2d target_canvas) {
+void func_para::draw_to(canvas_2d target) {
     double para{precis};
     int cnt{0};
     point ini{func_x(0), func_y(0)}, end{func_x(precis), func_y(precis)};
-    while (target_canvas.range_check(target_canvas.to_pix(end)) && cnt <= end_cnt) {
-        target_canvas.draw_line(ini, end, color);
+    while (target.contains(target.to_pix(end)) && cnt <= end_cnt) {
+        target.draw_line(ini, end, color);
         ini = end;
         para += precis;
         end = {func_x(para), func_y(para)};
@@ -73,8 +73,8 @@ void func_para::draw(canvas_2d target_canvas) {
     end = {func_x(-precis), func_y(-precis)};
     para = -precis;
     cnt = 0;
-    while (target_canvas.range_check(target_canvas.to_pix(end)) && cnt <= end_cnt) {
-        target_canvas.draw_line(ini, end, color);
+    while (target.contains(target.to_pix(end)) && cnt <= end_cnt) {
+        target.draw_line(ini, end, color);
         ini = end;
         para -= precis;
         end = {func_x(para), func_y(para)};
