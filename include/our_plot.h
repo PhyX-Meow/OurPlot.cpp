@@ -23,6 +23,7 @@ struct pix {
     }
 };
 
+const pix Black(0, 0, 0);
 const pix White(0xFF, 0xFF, 0xFF);
 const pix Red(0xFF, 0, 0);
 const pix Green(0, 0xFF, 0);
@@ -75,8 +76,8 @@ class canvas_2d {
         return data[0].size();
     }
     void draw_line(point ini, point end, pix color);
-    bool range_check(pix_pos pixx) {
-        return (pixx.clm < width()) && (pixx.clm >= 0) && (pixx.row < height()) && (pixx.row >= 0);
+    bool contains(pix_pos pos) {
+        return (pos.clm < width()) && (pos.clm >= 0) && (pos.row < height()) && (pos.row >= 0);
     }
     range x;
     range y;
@@ -86,20 +87,34 @@ class canvas_2d {
     point to_point(pix_pos pos);
     pix_pos to_pix(point p);
 };
-class func_1var {
+
+class shape_2d {
   public:
-    func_1var(double (*func_)(double), double precis_, pix color_, canvas_2d target_canvas) {
+    void paint_to(canvas_2d target);
+    void set_color(pix color_) {
+        color = color_;
+    }
+    pix get_color() {
+        return color;
+    }
+
+  private:
+    pix color;
+};
+canvas_2d &operator<<(canvas_2d target, shape_2d shape);
+
+class func_1var : public shape_2d {
+  public:
+    func_1var(double (*func_)(double), double precis_, pix color_) {
         func = func_;
         precis = precis_;
-        color = color_;
-        draw(target_canvas);
+        set_color(color_);
     }
-    void draw(canvas_2d target_canvas);
+    void paint_to(canvas_2d target);
 
   private:
     double (*func)(double);
     double precis;
-    pix color;
 };
 
 class func_polar {
