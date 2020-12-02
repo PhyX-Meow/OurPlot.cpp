@@ -7,12 +7,12 @@ canvas_2d::canvas_2d(int height, int width, range x_, range y_) {
     y = y_;
     step_x = x_.length() / width;
     step_y = y_.length() / height;
-    origin.clm = static_cast<int>(-x_.min / x_.length() * width);
-    origin.row = static_cast<int>(-y_.min / y_.length() * height);
+    origin.clm = i_floor(-x_.min / x_.length() * width);
+    origin.row = i_floor(-y_.min / y_.length() * height);
 }
 
 pix_pos canvas_2d::to_pix(point p) {
-    return {static_cast<int>(p.x / step_x) + origin.clm, static_cast<int>(p.y / step_y) + origin.row};
+    return {i_floor(p.x / step_x) + origin.clm, i_floor(p.y / step_y) + origin.row};
 }
 point canvas_2d::to_point(pix_pos pos) {
     return {(pos.clm - origin.clm + 0.5) * step_x, (pos.row - origin.row + 0.5) * step_y};

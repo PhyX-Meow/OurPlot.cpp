@@ -9,6 +9,9 @@
 inline double abs_d(double x) {
     return x > 0 ? x : -x;
 }
+inline int i_floor(double x) {
+    return x >= 0 ? static_cast<int>(x) : static_cast<int>(x) - 1;
+}
 
 using col = unsigned char;
 struct pix {
@@ -61,6 +64,28 @@ struct pix_pos {
 
 using img2d = std::vector<std::vector<pix>>;
 using imgrow = std::vector<pix>;
+struct pixrow {
+    int size;
+    pix *data;
+    pixrow() {
+        size = 0;
+        data = nullptr;
+    }
+    pixrow(int n) {
+        size = n;
+        data = new pix[n];
+    }
+    pixrow(int n, pix color) {
+        size = n;
+        data = new pix[n];
+        for (int i = 0; i < n; ++i) {
+            data[i] = color;
+        }
+    }
+    ~pixrow() {
+        delete[] data;
+    }
+};
 
 class canvas_2d {
   public:
