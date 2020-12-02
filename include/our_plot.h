@@ -15,7 +15,7 @@ struct pix {
     col b;
     col g;
     col r;
-    pix() {}
+    pix();
     pix(col red, col green, col blue) {
         r = red;
         g = green;
@@ -23,7 +23,6 @@ struct pix {
     }
 };
 
-const pix Black(0, 0, 0);
 const pix White(0xFF, 0xFF, 0xFF);
 const pix Red(0xFF, 0, 0);
 const pix Green(0, 0xFF, 0);
@@ -32,7 +31,7 @@ const pix Blue(0, 0, 0xFF);
 struct point {
     double x;
     double y;
-    point() {}
+    point();
     point(double x_, double y_) {
         x = x_;
         y = y_;
@@ -55,8 +54,8 @@ struct range {
     }
 };
 struct pix_pos {
-    int clm;
     int row;
+    int clm;
 };
 
 using img2d = std::vector<std::vector<pix>>;
@@ -76,9 +75,7 @@ class canvas_2d {
         return data[0].size();
     }
     void draw_line(point ini, point end, pix color);
-    bool contains(pix_pos pos) {
-        return (pos.clm < width()) && (pos.clm >= 0) && (pos.row < height()) && (pos.row >= 0);
-    }
+
     range x;
     range y;
     pix_pos origin;
@@ -87,65 +84,13 @@ class canvas_2d {
     point to_point(pix_pos pos);
     pix_pos to_pix(point p);
 };
-
-class shape_2d {
-  public:
-    void set_color(pix color_) {
-        color = color_;
-    }
-    pix get_color() {
-        return color;
-    }
-    void set_precis(double precis_) {
-        precis = precis_;
-    }
-    double get_precis() {
-        return precis;
-    }
-
-  private:
-    pix color;
-    double precis{0.01};
+class func_1var {
 };
-
-class func_1var : public shape_2d {
-  public:
-    func_1var(double (*func_)(double), pix color_) {
-        func = func_;
-        set_color(color_);
-    }
-    func_1var(double (*func_)(double), pix color_, double precis_) {
-        func = func_;
-        set_color(color_);
-        set_precis(precis_);
-    }
-    void paint_to(canvas_2d target);
-
-  private:
-    double (*func)(double);
-};
-canvas_2d &operator<<(canvas_2d &target, func_1var shape);
 
 class func_polar {
 };
 
 class func_para {
-  public: //end_cnt is just for test;
-    func_para(double (*func_x_)(double), double (*func_y_)(double), double precis_, pix color_, int end_cnt_) {
-        func_x = func_x_;
-        func_y = func_y_;
-        precis = precis_;
-        color = color_;
-        end_cnt = end_cnt_;
-    }
-    void draw(canvas_2d target);
-
-  private:
-    double (*func_x)(double);
-    double (*func_y)(double);
-    double precis;
-    pix color;
-    int end_cnt;
 };
 
 class axes {
