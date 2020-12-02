@@ -24,13 +24,33 @@ struct pix {
         g = green;
         b = blue;
     }
+    pix(unsigned c) {
+        b = c % 256;
+        c >>= 8;
+        g = c % 256;
+        c >>= 8;
+        r = c % 256;
+    }
+    pix operator~() {
+        return pix(~r, ~g, ~b);
+    }
+    pix operator<<(unsigned n) {
+        pix tmp = ~(*this);
+        tmp.r <<= n;
+        tmp.g <<= n;
+        tmp.b <<= n;
+        return ~tmp;
+    }
 };
 
-const pix Black(0, 0, 0);
-const pix White(0xFF, 0xFF, 0xFF);
-const pix Red(0xFF, 0, 0);
-const pix Green(0, 0xFF, 0);
-const pix Blue(0, 0, 0xFF);
+const pix White(0xFFFFFF);
+const pix Red(0xFF0000);
+const pix Green(0x00FF00);
+const pix Blue(0x0000FF);
+const pix Cyan(0x00FFFFF);
+const pix Purple(0xFF00FF);
+const pix Yellow(0xFFFF00);
+const pix Black(0x000000);
 
 struct point {
     double x;
@@ -113,27 +133,7 @@ class canvas_2d {
     pix_pos to_pix(point p);
 };
 
-class shape_2d {
-  public:
-    void set_color(pix color_) {
-        color = color_;
-    }
-    pix get_color() {
-        return color;
-    }
-    void set_precis(double precis_) {
-        precis = precis_;
-    }
-    double get_precis() {
-        return precis;
-    }
-
-  private:
-    pix color;
-    double precis{0.01};
-};
-
-class func_1var : public shape_2d {
+class func_1var {
   public:
     func_1var(double (*func_)(double), pix color_) {
         func = func_;
@@ -145,9 +145,23 @@ class func_1var : public shape_2d {
         set_precis(precis_);
     }
     void paint_to(canvas_2d target);
+    void set_color(pix color_) {
+        color = color_;
+    }
+    pix get_color() {
+        return color;
+    }
+    void set_precis(double precis_) {
+        max_precis = precis_;
+    }
+    double get_precis() {
+        return max_precis;
+    }
 
   private:
+    pix color;
     double (*func)(double);
+    int max_precis;
 };
 canvas_2d &operator<<(canvas_2d &target, func_1var shape);
 
@@ -163,7 +177,7 @@ class func_para {
         color = color_;
         end_cnt = end_cnt_;
     }
-    void draw(canvas_2d target);
+    void paint_to(canvas_2d target);
 
   private:
     double (*func_x)(double);

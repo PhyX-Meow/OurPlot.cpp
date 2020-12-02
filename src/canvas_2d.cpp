@@ -65,12 +65,12 @@ void func_1var::paint_to(canvas_2d target) {
         end.y = func(end.x);
     }
 }
-void func_para::draw(canvas_2d target_canvas) {
+void func_para::paint_to(canvas_2d target) {
     double para{precis};
     int cnt{0};
     point ini{func_x(0), func_y(0)}, end{func_x(precis), func_y(precis)};
-    while (target_canvas.contains(target_canvas.to_pix(end)) && cnt <= end_cnt) {
-        target_canvas.draw_line(ini, end, color);
+    while (target.contains(target.to_pix(end)) && cnt <= end_cnt) {
+        target.draw_line(ini, end, color);
         ini = end;
         para += precis;
         end = {func_x(para), func_y(para)};
@@ -80,8 +80,8 @@ void func_para::draw(canvas_2d target_canvas) {
     end = {func_x(-precis), func_y(-precis)};
     para = -precis;
     cnt = 0;
-    while (target_canvas.contains(target_canvas.to_pix(end)) && cnt <= end_cnt) {
-        target_canvas.draw_line(ini, end, color);
+    while (target.contains(target.to_pix(end)) && cnt <= end_cnt) {
+        target.draw_line(ini, end, color);
         ini = end;
         para -= precis;
         end = {func_x(para), func_y(para)};
