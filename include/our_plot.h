@@ -120,10 +120,13 @@ class canvas_2d {
     int width() {
         return data[0].size();
     }
-    void draw_line(point ini, point end, pix color);
+
     bool contains(pix_pos pos) {
         return (pos.clm < width()) && (pos.clm >= 0) && (pos.row < height()) && (pos.row >= 0);
     }
+    void draw_line(point ini, point end, pix color);
+
+  private:
     range x;
     range y;
     pix_pos origin;
@@ -144,7 +147,6 @@ class func_1var {
         set_color(color_);
         set_precis(precis_);
     }
-    void paint_to(canvas_2d target);
     void set_color(pix color_) {
         color = color_;
     }
@@ -157,6 +159,7 @@ class func_1var {
     double get_precis() {
         return max_precis;
     }
+    void paint_to(canvas_2d target);
 
   private:
     pix color;
