@@ -62,6 +62,8 @@ struct point {
     }
 };
 
+using affine = point;
+
 inline point euclid(double x, double y) {
     return point(x, y);
 }
@@ -123,11 +125,11 @@ class canvas_2d {
     bool contains(pix_pos pos) {
         return (pos.clm < width()) && (pos.clm >= 0) && (pos.row < height()) && (pos.row >= 0);
     }
-    void draw_line(point ini, point end, pix color);
-    point to_point(pix_pos pos);
+    void draw_line(point ini_, point end_, pix color);
+
     pix_pos to_pix(point p);
-    point aff_trans(point p);
-    pix_pos to_pix_noaff(point p);
+    point to_affine(point p);
+    point to_affine(pix_pos pos);
 
   private:
     range x;
