@@ -6,21 +6,22 @@ int bmp_write(std::vector<std::vector<pix>> &data, const char filename[]) {
     int filesize = (width * 3 + setoff) * height;
     bmp_head bh1 = {{'B', 'M'}, filesize + 0x36, 0, 0, 0x36};
     dib_head dh1 = {0x28, height, width, 1, 24, 0, filesize};
-    std::ofstream fout(filename, std::ios::binary);
-    fout.write((char *) &bh1.id[2], 4);
-    fout.write((char *) &bh1.sizebmp, 4);
-    fout.write((char *) &bh1.zero1, 2);
-    fout.write((char *) &bh1.zero2, 2);
-    fout.write((char *) &bh1.offset, 4);
-    fout.write((char *) &dh1, sizeof(dh1));
+    std::ofstream file(filename, std::ios::binary);
+    file.write(bh1.id, 2);
+    file.write((char *) &bh1.sizebmp, 4);
+    file.write((char *) &bh1.zero1, 2);
+    file.write((char *) &bh1.zero2, 2);
+    file.write((char *) &bh1.offset, 4);
+    file.write((char *) &dh1, sizeof(dh1));
     char pad[4] = {0, 0, 0, 0};
     for (int i = 0; i < width; i++) {
         for (int j = 0; j < height; j++) {
-            fout.write((char *) &data[j][i], 3);
+            file.write((char *) &(data[j][i]), 3);
         }
-        fout.write((char *) &pad[4], setoff);
+        file.write(pad, setoff);
     }
-    fout.close();
+    file.close();
+    return 0;
 }
 int bmp_read(std::vector<std::vector<pix>> &data, const char filename[]) {
     std::ifstream fin(filename, std::ios::binary);
@@ -37,4 +38,5 @@ int bmp_read(std::vector<std::vector<pix>> &data, const char filename[]) {
         fin.seekg(setoff, std::ios::beg);
     }
     fin.close();
+    return 0;
 }

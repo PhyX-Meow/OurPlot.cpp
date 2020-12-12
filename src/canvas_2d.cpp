@@ -36,7 +36,8 @@ void canvas_2d::draw_line(point ini_, point end_, pix color) {
             double t = to_affine(pix_pos{i, origin.row}).x;
             double h = slope * t + c;
             centre = to_pix({t, h});
-            for (int i = -1; i <= 1; i++) {
+            //last step: for every pixel position, paint 9*9 square
+            for (int i = -1; i <= 1; i++)
                 for (int j = -1; j <= 1; j++) {
                     affine dummy = to_affine(pix_pos{centre.clm + i, centre.row + j});
                     if (i != 0 && j != 0)
@@ -46,7 +47,6 @@ void canvas_2d::draw_line(point ini_, point end_, pix color) {
                     if (contains({centre.clm + i, centre.row + j}))
                         (*this)[{centre.clm + i, centre.row + j}] = color;
                 }
-            }
         }
     } else {
         slope = (end.x - ini.x) / (end.y - ini.y);
@@ -57,7 +57,7 @@ void canvas_2d::draw_line(point ini_, point end_, pix color) {
             double t = to_affine(pix_pos{i, origin.clm}).y;
             double h = slope * t + c;
             centre = to_pix({h, t});
-            for (int i = -1; i <= 1; i++) {
+            for (int i = -1; i <= 1; i++)
                 for (int j = -1; j <= 1; j++) {
                     affine dummy = to_affine(pix_pos{centre.clm + i, centre.row + j});
                     if (i != 0 && j != 0)
@@ -67,9 +67,7 @@ void canvas_2d::draw_line(point ini_, point end_, pix color) {
                     if (contains({centre.clm + i, centre.row + j}))
                         (*this)[{centre.clm + i, centre.row + j}] = color;
                 }
-            }
         }
-        //last step: for every pixel position, paint 9*9 square
     }
 }
 
