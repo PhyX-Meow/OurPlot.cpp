@@ -6,10 +6,10 @@
 #include <cstring>
 #include <vector>
 
-inline double abs_d(double x) {
+inline double abs_d(double x) { //abs:double => double
     return x > 0 ? x : -x;
 }
-inline int i_floor(double x) {
+inline int i_floor(double x) { //floor:double => int
     return x >= 0 ? static_cast<int>(x) : static_cast<int>(x) - 1;
 }
 
@@ -104,13 +104,17 @@ class canvas_2d {
     bool contains(pix_pos pos) {
         return (pos.clm < width()) && (pos.clm >= 0) && (pos.row < height()) && (pos.row >= 0);
     }
+    point to_point(pix_pos pos);
+    pix_pos to_pix(point p);
+    point aff_trans(point p);
+    pix_pos to_pix_noaff(point p);
+
+  private:
     range x;
     range y;
     pix_pos origin;
     double step_x;
     double step_y;
-    point to_point(pix_pos pos);
-    pix_pos to_pix(point p);
 };
 
 class shape_2d {
