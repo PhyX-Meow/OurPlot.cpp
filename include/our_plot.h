@@ -1,57 +1,25 @@
 #ifndef _OUR_PLOT_
 #define _OUR_PLOT_
 
-#include <algorithm>
+#include "plot_basic.h"
 #include <cmath>
-#include <cstring>
-#include <vector>
 
-inline double abs_d(double x) { //abs:double => double
+// abs : double -> double
+inline double abs_d(double x) {
     return x > 0 ? x : -x;
 }
-inline int i_floor(double x) { //floor:double => int
+// i_floor : double -> int
+inline int i_floor(double x) {
     return x >= 0 ? static_cast<int>(x) : static_cast<int>(x) - 1;
 }
 
-using col = unsigned char;
-struct pix {
-    col b;
-    col g;
-    col r;
-    pix() {}
-    pix(col red, col green, col blue) {
-        r = red;
-        g = green;
-        b = blue;
-    }
-    pix(unsigned c) {
-        b = c % 256;
-        c >>= 8;
-        g = c % 256;
-        c >>= 8;
-        r = c % 256;
-    }
-    pix operator~() {
-        return pix(~r, ~g, ~b);
-    }
-    pix operator<<(unsigned n) {
-        pix tmp = ~(*this);
-        tmp.r <<= n;
-        tmp.g <<= n;
-        tmp.b <<= n;
-        return ~tmp;
+struct range {
+    double min;
+    double max;
+    double length() {
+        return max - min;
     }
 };
-
-const pix White(0xFFFFFF);
-const pix Red(0xFF0000);
-const pix Green(0x00FF00);
-const pix Blue(0x0000FF);
-const pix Cyan(0x00FFFFF);
-const pix Purple(0xFF00FF);
-const pix Yellow(0xFFFF00);
-const pix Black(0x000000);
-
 struct point {
     double x;
     double y;
@@ -62,8 +30,6 @@ struct point {
     }
 };
 
-using affine = point;
-
 inline point euclid(double x, double y) {
     return point(x, y);
 }
@@ -72,41 +38,11 @@ inline point polar(double r, double th) {
     return point(r * cos(th), r * sin(th));
 }
 
-struct range {
-    double min;
-    double max;
-    double length() {
-        return max - min;
-    }
-};
+using affine = point;
+
 struct pix_pos {
     int clm;
     int row;
-};
-
-using img2d = std::vector<std::vector<pix>>;
-using imgrow = std::vector<pix>;
-struct pixrow {
-    int size;
-    pix *data;
-    pixrow() {
-        size = 0;
-        data = nullptr;
-    }
-    pixrow(int n) {
-        size = n;
-        data = new pix[n];
-    }
-    pixrow(int n, pix color) {
-        size = n;
-        data = new pix[n];
-        for (int i = 0; i < n; ++i) {
-            data[i] = color;
-        }
-    }
-    ~pixrow() {
-        delete[] data;
-    }
 };
 
 class canvas_2d {
@@ -120,7 +56,7 @@ class canvas_2d {
         return data.size();
     }
     int width() {
-        return data[0].size();
+        return data[0].size;
     }
     bool contains(pix_pos pos) {
         return (pos.clm < width()) && (pos.clm >= 0) && (pos.row < height()) && (pos.row >= 0);

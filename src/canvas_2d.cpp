@@ -2,7 +2,7 @@
 #include <string>
 
 canvas_2d::canvas_2d(int height, int width, range x_, range y_) {
-    data = img2d(height, imgrow(width, White));
+    data = img2d(height, pixrow(width, White));
     x = x_;
     y = y_;
     step_x = x_.length() / width;
