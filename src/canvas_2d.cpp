@@ -20,12 +20,13 @@ pix_pos canvas_2d::to_pix(point p) {
     return {i_floor(p.x) + origin.clm, i_floor(p.y) + origin.row};
 }
 
-void canvas_2d::draw_line(point ini_, point end_, pix color) {
+void canvas_2d::draw_line(point ini_, point end_, pix color, plot_style style) {
     //first step: affine trans.
     affine ini = to_affine(ini_), end = to_affine(end_);
     pix_pos start = to_pix(ini), ending = to_pix(end);
     double slope, c, dist2;
     slope = (end.y - ini.y) / (end.x - ini.x);
+
     pix_pos centre;
     //second step: search responding pixel positions
     if (abs_d(slope) <= 1.0) {
@@ -36,16 +37,18 @@ void canvas_2d::draw_line(point ini_, point end_, pix color) {
             double t = to_affine(pix_pos{i, origin.row}).x;
             double h = slope * t + c;
             centre = to_pix({t, h});
+
             //last step: for every pixel position, paint 9*9 square
             for (int i = -1; i <= 1; i++)
                 for (int j = -1; j <= 1; j++) {
-                    affine dummy = to_affine(pix_pos{centre.clm + i, centre.row + j});
-                    if (i != 0 && j != 0)
-                        dist2 = (dummy.x * slope + c - dummy.y) * (dummy.x * slope + c - dummy.y) / (slope * slope + 1);
-                    else
-                        dist2 = 0;
-                    if (contains({centre.clm + i, centre.row + j}))
-                        (*this)[{centre.clm + i, centre.row + j}] = color;
+                    affine aff = to_affine(centre.add(i, j));
+                    dist2 = (aff.x * slope + c - aff.y) * (aff.x * slope + c - aff.y) / (slope * slope + 1);
+                    if (contains(centre.add(i, j))) {
+                        if (dist2 <= 0.5)
+                            (*this)[centre.add(i, j)] = color;
+                        else if (dist2 <= 1)
+                            (*this)[centre.add(i, j)] = color * 0.5;
+                    }
                 }
         }
     } else {
@@ -57,15 +60,17 @@ void canvas_2d::draw_line(point ini_, point end_, pix color) {
             double t = to_affine(pix_pos{i, origin.clm}).y;
             double h = slope * t + c;
             centre = to_pix({h, t});
+
             for (int i = -1; i <= 1; i++)
                 for (int j = -1; j <= 1; j++) {
-                    affine dummy = to_affine(pix_pos{centre.clm + i, centre.row + j});
-                    if (i != 0 && j != 0)
-                        dist2 = (dummy.y * slope + c - dummy.x) * (dummy.y * slope + c - dummy.x) / (slope * slope + 1);
-                    else
-                        dist2 = 0;
-                    if (contains({centre.clm + i, centre.row + j}))
-                        (*this)[{centre.clm + i, centre.row + j}] = color;
+                    affine aff = to_affine(centre.add(i, j));
+                    dist2 = (aff.y * slope + c - aff.x) * (aff.y * slope + c - aff.x) / (slope * slope + 1);
+                    if (contains(centre.add(i, j))) {
+                        if (dist2 <= 0.5)
+                            (*this)[centre.add(i, j)] = color;
+                        else if (dist2 <= 1)
+                            (*this)[centre.add(i, j)] = color * 0.5;
+                    }
                 }
         }
     }
@@ -76,23 +81,11 @@ canvas_2d &operator<<(canvas_2d &target, func_1var shape) {
     return target;
 }
 
-void func_1var::paint_to(canvas_2d target) {
+void func_1var::paint_to(canvas_2d &target) {
     pix color = get_color();
     double precis = get_precis();
-    point ini{0, func(0)}, end{precis, func(precis)};
-    while (target.contains(target.to_pix(end))) {
-        target.draw_line(ini, end, color);
-        ini = end;
-        end.x += precis;
-        end.y = func(end.x);
-    }
-    ini = {0, func(0)};
-    end = {-precis, func(-precis)};
-    while (target.contains(target.to_pix(end))) {
-        target.draw_line(ini, end, color);
-        ini = end;
-        end.x -= precis;
-        end.y = func(end.x);
+    for (double t = target.x.min - target.step_x; t < target.x.max + target.step_x; t += precis) {
+        target.draw_line({t, func(t)}, {t + precis, func(t + precis)}, color);
     }
 }
 void func_para::paint_to(canvas_2d target) {

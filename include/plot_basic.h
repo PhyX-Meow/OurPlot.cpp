@@ -24,11 +24,11 @@ struct pix {
     pix operator~() {
         return pix(~r, ~g, ~b);
     }
-    pix operator<<(unsigned n) {
+    pix operator*(double k) {
         pix tmp = ~(*this);
-        tmp.r <<= n;
-        tmp.g <<= n;
-        tmp.b <<= n;
+        tmp.r = static_cast<char>(tmp.r * k);
+        tmp.g = static_cast<char>(tmp.g * k);
+        tmp.b = static_cast<char>(tmp.b * k);
         return ~tmp;
     }
 };
