@@ -56,7 +56,7 @@ class canvas_2d {
         return data.size();
     }
     int width() {
-        return data[0].size;
+        return data[0].size();
     }
     bool contains(pix_pos pos) {
         return (pos.clm < width()) && (pos.clm >= 0) && (pos.row < height()) && (pos.row >= 0);

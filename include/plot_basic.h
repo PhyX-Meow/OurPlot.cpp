@@ -41,31 +41,8 @@ const pix Cyan(0x00FFFFF);
 const pix Purple(0xFF00FF);
 const pix Yellow(0xFFFF00);
 const pix Black(0x000000);
-struct pixrow {
-    int size;
-    pix *data;
-    pixrow() {
-        size = 0;
-        data = nullptr;
-    }
-    pixrow(int n) {
-        size = n;
-        data = new pix[n];
-    }
-    pixrow(int n, pix color) {
-        size = n;
-        data = new pix[n];
-        for (int i = 0; i < n; ++i) {
-            data[i] = color;
-        }
-    }
-    ~pixrow() {
-        delete[] data;
-    }
-    pix &operator[](int index) {
-        return data[index];
-    }
-};
-using img2d = std::vector<pixrow>;
+
+using pixrow = std::vector<pix>;
+using img2d = std::vector<std::vector<pix>>;
 
 #endif

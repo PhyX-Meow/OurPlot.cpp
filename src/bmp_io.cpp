@@ -1,7 +1,7 @@
 #include "../include/bmp_io.h"
 
 int bmp_write(img2d &data, const char filename[]) {
-    int height = data.size(), width = data[0].size;
+    int height = data.size(), width = data[0].size();
     int offset = width % 4;
     int datasize = (width * 3 + offset) * height;
 
@@ -21,7 +21,7 @@ int bmp_write(img2d &data, const char filename[]) {
 
     const char pad[4]{0, 0, 0, 0};
     for (int i = 0; i < height; i++) {
-        file.write(reinterpret_cast<char *>(data[i].data), 3 * width);
+        file.write(reinterpret_cast<char *>(data[i].data()), 3 * width);
         file.write(pad, offset);
     }
 
@@ -37,7 +37,7 @@ int bmp_read(img2d &data, const char filename[]) {
     file.read(reinterpret_cast<char *>(&height), 4);
     int offset = width % 4;
     for (int i = 0; i < height; i++) {
-        file.read(reinterpret_cast<char *>(data[i].data), 3 * width);
+        file.read(reinterpret_cast<char *>(data[i].data()), 3 * width);
         file.seekg(offset, std::ios::cur);
     }
     file.close();
