@@ -66,7 +66,7 @@ class canvas_2d {
     pix &operator[](const pix_pos &pos) {
         return data[pos.row][pos.clm];
     }
-    canvas_2d(int height, int width, range x_, range y_);
+    canvas_2d(int width, int height, range x_, range y_);
 
     int height() { return data.size(); }
     int width() { return data[0].size(); }

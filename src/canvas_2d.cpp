@@ -1,7 +1,7 @@
 #include "../include/our_plot.h"
 #include <string>
 
-canvas_2d::canvas_2d(int height, int width, range x_, range y_) {
+canvas_2d::canvas_2d(int width, int height, range x_, range y_) {
     data = img2d(height, pixrow(width, White));
     x = x_;
     y = y_;
@@ -57,7 +57,7 @@ void canvas_2d::draw_line(point ini_, point end_, pix color, plot_style style) {
         if (ini.y > end.y)
             std::swap(ini, end), std::swap(start, ending);
         for (int i = start.row; i <= ending.row; ++i) {
-            double t = to_affine(pix_pos{i, origin.clm}).y;
+            double t = to_affine(pix_pos{origin.clm, i}).y;
             double h = slope * t + c;
             centre = to_pix({h, t});
 
