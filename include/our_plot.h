@@ -28,6 +28,9 @@ struct point {
         x = x_;
         y = y_;
     }
+    point operator+(point adder) {
+        return {x + adder.x, y + adder.y};
+    }
 };
 
 inline point euclid(double x, double y) {
@@ -43,6 +46,18 @@ using affine = point;
 struct pix_pos {
     int clm;
     int row;
+    pix_pos add(pix_pos adder) {
+        return {clm + adder.clm, row + adder.row};
+    }
+    pix_pos add(int n, int m) {
+        return {clm + n, row + m};
+    }
+};
+
+enum plot_style {
+    thin,
+    medium,
+    thick
 };
 
 class canvas_2d {
@@ -51,28 +66,26 @@ class canvas_2d {
     pix &operator[](const pix_pos &pos) {
         return data[pos.row][pos.clm];
     }
-    canvas_2d(int height, int width, range x_, range y_);
-    int height() {
-        return data.size();
-    }
-    int width() {
-        return data[0].size();
-    }
+    canvas_2d(int width, int height, range x_, range y_);
+
+    int height() { return data.size(); }
+    int width() { return data[0].size(); }
+
     bool contains(pix_pos pos) {
         return (pos.clm < width()) && (pos.clm >= 0) && (pos.row < height()) && (pos.row >= 0);
     }
-    void draw_line(point ini_, point end_, pix color);
+    void draw_line(point ini_, point end_, pix color, plot_style style = thin);
 
     pix_pos to_pix(point p);
     point to_affine(point p);
     point to_affine(pix_pos pos);
 
-  private:
+    double step_x;
+    double step_y;
+
     range x;
     range y;
     pix_pos origin;
-    double step_x;
-    double step_y;
 };
 
 class func_1var {
@@ -86,24 +99,19 @@ class func_1var {
         set_color(color_);
         set_precis(precis_);
     }
-    void set_color(pix color_) {
-        color = color_;
-    }
-    pix get_color() {
-        return color;
-    }
-    void set_precis(double precis_) {
-        max_precis = precis_;
-    }
-    double get_precis() {
-        return max_precis;
-    }
-    void paint_to(canvas_2d target);
+
+    void set_color(pix color_) { color = color_; }
+    pix get_color() { return color; }
+
+    void set_precis(double precis_) { precis = precis_; }
+    double get_precis() { return precis; }
+
+    void paint_to(canvas_2d &target);
 
   private:
     pix color;
     double (*func)(double);
-    int max_precis;
+    double precis = 0.1;
 };
 canvas_2d &operator<<(canvas_2d &target, func_1var shape);
 
