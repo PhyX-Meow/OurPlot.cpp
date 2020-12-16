@@ -77,37 +77,24 @@ void canvas_2d::draw_line(point ini_, point end_, pix color, plot_style style) {
 }
 
 canvas_2d &operator<<(canvas_2d &target, func_1var shape) {
-    shape.paint_to(target);
+    pix color = shape.color;
+    double precis = shape.precis;
+    for (double t = target.x.min - target.step_x; t < target.x.max + target.step_x; t += precis)
+        target.draw_line({t, shape.func(t)}, {t + precis, shape.func(t + precis)}, color);
+    return target;
+}
+canvas_2d &operator<<(canvas_2d &target, func_polar shape) {
+    pix color = shape.color;
+    double precis = shape.precis;
+    for (double theta = 0; theta < 6.2832 + precis; theta += precis)
+        target.draw_line(polar(shape.func(theta), theta), polar(shape.func(theta + precis), theta + precis), color);
     return target;
 }
 
-void func_1var::paint_to(canvas_2d &target) {
-    pix color = get_color();
-    double precis = get_precis();
-    for (double t = target.x.min - target.step_x; t < target.x.max + target.step_x; t += precis) {
-        target.draw_line({t, func(t)}, {t + precis, func(t + precis)}, color);
-    }
-}
-void func_para::paint_to(canvas_2d target) {
-    double para{precis};
-    int cnt{0};
-    point ini{func_x(0), func_y(0)}, end{func_x(precis), func_y(precis)};
-    while (target.contains(target.to_pix(end)) && cnt <= end_cnt) {
-        target.draw_line(ini, end, color);
-        ini = end;
-        para += precis;
-        end = {func_x(para), func_y(para)};
-        cnt++;
-    }
-    ini = {func_x(0), func_y(0)};
-    end = {func_x(-precis), func_y(-precis)};
-    para = -precis;
-    cnt = 0;
-    while (target.contains(target.to_pix(end)) && cnt <= end_cnt) {
-        target.draw_line(ini, end, color);
-        ini = end;
-        para -= precis;
-        end = {func_x(para), func_y(para)};
-        cnt++;
-    }
+canvas_2d &operator<<(canvas_2d &target, func_para shape) {
+    pix color = shape.color;
+    double precis = shape.precis;
+    for (double t = shape.t.min; t < shape.t.max + precis; t += precis)
+        target.draw_line({shape.func_x(t), shape.func_y(t)}, {shape.func_x(t + precis), shape.func_y(t + precis)}, color);
+    return target;
 }
