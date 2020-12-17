@@ -24,46 +24,31 @@ inline point polar(double r, double th) {
     return point(r * cos(th), r * sin(th));
 }
 
-using affine = point;
-
-enum plot_style {
-    thin,
-    medium,
-    thick
-};
-
 class canvas_2d : public canvas {
   public:
     canvas_2d(int width, int height, range x_, range y_);
 
-    void draw_line(point ini_, point end_, pix color, plot_style style = thin);
-
-    pix_pos to_pix(point p);
-    point to_affine(point p);
-    point to_affine(pix_pos pos);
+    affine to_affine(point p) {
+        return {p.x / step_x, p.y / step_y};
+    }
 
     double step_x;
     double step_y;
 
     range x;
     range y;
-    pix_pos origin;
 };
 
 class line {
   public:
-    line(point ini_, point end_) {
-        ini = ini_;
-        end = end_;
-    }
-    line(point ini_, point end_, pix color_) {
+    line(point ini_, point end_, pix color_ = Black) {
         ini = ini_;
         end = end_;
         color = color_;
     }
     point ini;
     point end;
-    pix color{Black};
+    pix color;
 };
 canvas_2d &operator<<(canvas_2d &target, line L);
 

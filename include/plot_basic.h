@@ -76,6 +76,17 @@ struct pix_pos {
     }
 };
 
+struct affine {
+    double x;
+    double y;
+};
+
+enum plot_style {
+    thin,
+    medium,
+    thick
+};
+
 class canvas {
   public:
     img2d data;
@@ -89,7 +100,17 @@ class canvas {
     bool contains(pix_pos pos) {
         return (pos.clm < width()) && (pos.clm >= 0) && (pos.row < height()) && (pos.row >= 0);
     }
+    pix_pos to_pix(affine p) {
+        return {i_floor(p.x) + origin.clm, i_floor(p.y) + origin.row};
+    }
+    affine to_affine(pix_pos pos) {
+        return {pos.clm - origin.clm + 0.5, pos.row - origin.row + 0.5};
+    }
+
+    void draw_line(affine ini_, affine end_, pix color, plot_style style = thin);
     int save_as(const char filename[]);
+
+    pix_pos origin;
 };
 
 #endif
