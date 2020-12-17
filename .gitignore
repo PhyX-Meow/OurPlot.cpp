@@ -1,5 +1,6 @@
 *test*
 *.exe
 *.out
+*.so
 *.bmp
 .vscode/*

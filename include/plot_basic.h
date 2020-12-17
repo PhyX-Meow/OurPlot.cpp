@@ -1,7 +1,27 @@
 #ifndef _PLOT_BASIC_
 #define _PLOT_BASIC_
 
+#include <cmath>
 #include <vector>
+
+const double pi = M_PI;
+
+// abs : double -> double
+inline double abs_d(double x) {
+    return x > 0 ? x : -x;
+}
+// i_floor : double -> int
+inline int i_floor(double x) {
+    return x >= 0 ? static_cast<int>(x) : static_cast<int>(x) - 1;
+}
+
+struct range {
+    double min;
+    double max;
+    double length() {
+        return max - min;
+    }
+};
 
 using col = unsigned char;
 struct pix {

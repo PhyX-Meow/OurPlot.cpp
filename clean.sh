@@ -1,1 +1,1 @@
-rm ./*.bmp ./*.out
+rm ./*.bmp ./*.out ./lib/*.so

@@ -1,5 +1,6 @@
 #include "../include/bmp_io.h"
-#include "../include/our_plot.h"
+#include "../include/plot_2d.h"
+#include <iostream>
 
 canvas_2d::canvas_2d(int width, int height, range x_, range y_) {
     data = img2d(height, pixrow(width, White));
@@ -108,5 +109,10 @@ canvas_2d &operator<<(canvas_2d &target, func_para curve) {
     return target;
 }
 int canvas_2d::save_as(const char filename[]) {
-    return bmp_write(data, filename);
+    int failed = bmp_write(data, filename);
+    if (failed)
+        return failed;
+    // 反馈用户写入文件正常结束
+    std::cout << "Writing Picture to " << filename << " Success!" << std::endl;
+    return 0;
 }
