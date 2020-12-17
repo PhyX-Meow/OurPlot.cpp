@@ -76,7 +76,7 @@ struct pix_pos {
     }
 };
 
-struct affine {
+struct float_pos {
     double x;
     double y;
 };
@@ -100,14 +100,14 @@ class canvas {
     bool contains(pix_pos pos) {
         return (pos.clm < width()) && (pos.clm >= 0) && (pos.row < height()) && (pos.row >= 0);
     }
-    pix_pos to_pix(affine p) {
+    pix_pos to_pix(float_pos p) {
         return {i_floor(p.x) + origin.clm, i_floor(p.y) + origin.row};
     }
-    affine to_affine(pix_pos pos) {
+    float_pos to_affine(pix_pos pos) {
         return {pos.clm - origin.clm + 0.5, pos.row - origin.row + 0.5};
     }
 
-    void draw_line(affine ini_, affine end_, pix color, plot_style style = thin);
+    void draw_line(float_pos ini, float_pos end, pix color, plot_style style = thin);
     int save_as(const char filename[]);
 
     pix_pos origin;

@@ -11,7 +11,7 @@ canvas_2d::canvas_2d(int width, int height, range x_, range y_) {
     origin.row = i_floor(-y_.min / y_.length() * height);
 }
 
-void canvas::draw_line(affine ini, affine end, pix color, plot_style style) {
+void canvas::draw_line(float_pos ini, float_pos end, pix color, plot_style style) {
     //first step: affine trans.
     pix_pos start = to_pix(ini), ending = to_pix(end);
     double slope, c, dist2;
@@ -31,7 +31,7 @@ void canvas::draw_line(affine ini, affine end, pix color, plot_style style) {
             //last step: for every pixel position, paint 9*9 square
             for (int i = -1; i <= 1; i++)
                 for (int j = -1; j <= 1; j++) {
-                    affine aff = to_affine(centre.add(i, j));
+                    float_pos aff = to_affine(centre.add(i, j));
                     dist2 = (aff.x * slope + c - aff.y) * (aff.x * slope + c - aff.y) / (slope * slope + 1);
                     if (contains(centre.add(i, j))) {
                         if (dist2 <= 0.5)
@@ -53,7 +53,7 @@ void canvas::draw_line(affine ini, affine end, pix color, plot_style style) {
 
             for (int i = -1; i <= 1; i++)
                 for (int j = -1; j <= 1; j++) {
-                    affine aff = to_affine(centre.add(i, j));
+                    float_pos aff = to_affine(centre.add(i, j));
                     dist2 = (aff.y * slope + c - aff.x) * (aff.y * slope + c - aff.x) / (slope * slope + 1);
                     if (contains(centre.add(i, j))) {
                         if (dist2 <= 0.5)
@@ -67,7 +67,7 @@ void canvas::draw_line(affine ini, affine end, pix color, plot_style style) {
 }
 
 canvas_2d &operator<<(canvas_2d &target, line L) {
-    affine ini{target.to_affine(L.ini)}, end{target.to_affine(L.end)};
+    float_pos ini{target.to_affine(L.ini)}, end{target.to_affine(L.end)};
     target.draw_line(ini, end, L.color);
     return target;
 }

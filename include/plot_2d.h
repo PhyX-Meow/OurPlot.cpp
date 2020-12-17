@@ -28,7 +28,7 @@ class canvas_2d : public canvas {
   public:
     canvas_2d(int width, int height, range x_, range y_);
 
-    affine to_affine(point p) {
+    float_pos to_affine(point p) {
         return {p.x / step_x, p.y / step_y};
     }
 
