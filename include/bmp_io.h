@@ -3,6 +3,7 @@
 
 #include "plot_basic.h"
 #include <fstream>
+#include <iostream>
 
 struct bmp_head {
     char id[2]{'B', 'M'};

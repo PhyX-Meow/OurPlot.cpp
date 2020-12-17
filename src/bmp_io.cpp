@@ -43,3 +43,12 @@ int bmp_read(img2d &data, const char filename[]) {
     file.close();
     return 0;
 }
+
+int canvas::save_as(const char filename[]) {
+    int failed = bmp_write(data, filename);
+    if (failed)
+        return failed;
+    // 反馈用户写入文件正常结束
+    std::cout << "Writing Picture to " << filename << " Success!" << std::endl;
+    return 0;
+}

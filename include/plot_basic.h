@@ -65,4 +65,31 @@ const pix Black(0x000000);
 using pixrow = std::vector<pix>;
 using img2d = std::vector<std::vector<pix>>;
 
+struct pix_pos {
+    int clm;
+    int row;
+    pix_pos add(pix_pos adder) {
+        return {clm + adder.clm, row + adder.row};
+    }
+    pix_pos add(int n, int m) {
+        return {clm + n, row + m};
+    }
+};
+
+class canvas {
+  public:
+    img2d data;
+    pix &operator[](const pix_pos &pos) {
+        return data[pos.row][pos.clm];
+    }
+
+    int height() { return data.size(); }
+    int width() { return data[0].size(); }
+
+    bool contains(pix_pos pos) {
+        return (pos.clm < width()) && (pos.clm >= 0) && (pos.row < height()) && (pos.row >= 0);
+    }
+    int save_as(const char filename[]);
+};
+
 #endif

@@ -26,39 +26,17 @@ inline point polar(double r, double th) {
 
 using affine = point;
 
-struct pix_pos {
-    int clm;
-    int row;
-    pix_pos add(pix_pos adder) {
-        return {clm + adder.clm, row + adder.row};
-    }
-    pix_pos add(int n, int m) {
-        return {clm + n, row + m};
-    }
-};
-
 enum plot_style {
     thin,
     medium,
     thick
 };
 
-class canvas_2d {
+class canvas_2d : public canvas {
   public:
-    img2d data;
-    pix &operator[](const pix_pos &pos) {
-        return data[pos.row][pos.clm];
-    }
     canvas_2d(int width, int height, range x_, range y_);
 
-    int height() { return data.size(); }
-    int width() { return data[0].size(); }
-
-    bool contains(pix_pos pos) {
-        return (pos.clm < width()) && (pos.clm >= 0) && (pos.row < height()) && (pos.row >= 0);
-    }
     void draw_line(point ini_, point end_, pix color, plot_style style = thin);
-    int save_as(const char filename[]);
 
     pix_pos to_pix(point p);
     point to_affine(point p);
