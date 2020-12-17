@@ -75,33 +75,38 @@ void canvas_2d::draw_line(point ini_, point end_, pix color, plot_style style) {
         }
     }
 }
+
 canvas_2d &operator<<(canvas_2d &target, line L) {
     target.draw_line(L.ini, L.end, L.color);
     return target;
 }
+canvas_2d &operator<<(canvas_2d &target, func_1var curve) {
+    pix color = curve.color;
+    double precis = curve.precis;
+    for (double t = target.x.min - target.step_x; t < target.x.max + target.step_x; t += precis)
+        target.draw_line({t, curve.func(t)}, {t + precis, curve.func(t + precis)}, color);
+    return target;
+}
+canvas_2d &operator<<(canvas_2d &target, func_polar curve) {
+    pix color = curve.color;
+    double precis = curve.precis;
+    double init_t = curve.angle.min, end_t = curve.angle.max;
+    double r, r_next = curve.func(init_t);
+    for (double theta = init_t; theta < end_t + precis; theta += precis) {
+        r = r_next;
+        r_next = curve.func(theta + precis);
+        precis = r > 1 ? curve.precis / r : curve.precis;
+        target.draw_line(polar(r, theta), polar(r_next, theta + precis), color);
+    }
+    return target;
+}
+canvas_2d &operator<<(canvas_2d &target, func_para curve) {
+    pix color = curve.color;
+    double precis = curve.precis;
+    for (double t = curve.time.min; t < curve.time.max + precis; t += precis)
+        target.draw_line({curve.func_x(t), curve.func_y(t)}, {curve.func_x(t + precis), curve.func_y(t + precis)}, color);
+    return target;
+}
 int canvas_2d::save_as(const char filename[]) {
     return bmp_write(data, filename);
-}
-
-canvas_2d &operator<<(canvas_2d &target, func_1var shape) {
-    pix color = shape.color;
-    double precis = shape.precis;
-    for (double t = target.x.min - target.step_x; t < target.x.max + target.step_x; t += precis)
-        target.draw_line({t, shape.func(t)}, {t + precis, shape.func(t + precis)}, color);
-    return target;
-}
-canvas_2d &operator<<(canvas_2d &target, func_polar shape) {
-    pix color = shape.color;
-    double precis = shape.precis;
-    for (double theta = 0; theta < 6.2832 + precis; theta += precis)
-        target.draw_line(polar(shape.func(theta), theta), polar(shape.func(theta + precis), theta + precis), color);
-    return target;
-}
-
-canvas_2d &operator<<(canvas_2d &target, func_para shape) {
-    pix color = shape.color;
-    double precis = shape.precis;
-    for (double t = shape.t.min; t < shape.t.max + precis; t += precis)
-        target.draw_line({shape.func_x(t), shape.func_y(t)}, {shape.func_x(t + precis), shape.func_y(t + precis)}, color);
-    return target;
 }
