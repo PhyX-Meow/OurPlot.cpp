@@ -1,5 +1,5 @@
+#include "../include/bmp_io.h"
 #include "../include/our_plot.h"
-#include <string>
 
 canvas_2d::canvas_2d(int width, int height, range x_, range y_) {
     data = img2d(height, pixrow(width, White));
@@ -74,6 +74,13 @@ void canvas_2d::draw_line(point ini_, point end_, pix color, plot_style style) {
                 }
         }
     }
+}
+canvas_2d &operator<<(canvas_2d &target, line L) {
+    target.draw_line(L.ini, L.end, L.color);
+    return target;
+}
+int canvas_2d::save_as(const char filename[]) {
+    return bmp_write(data, filename);
 }
 
 canvas_2d &operator<<(canvas_2d &target, func_1var shape) {

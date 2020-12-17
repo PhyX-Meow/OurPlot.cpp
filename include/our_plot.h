@@ -75,6 +75,7 @@ class canvas_2d {
         return (pos.clm < width()) && (pos.clm >= 0) && (pos.row < height()) && (pos.row >= 0);
     }
     void draw_line(point ini_, point end_, pix color, plot_style style = thin);
+    int save_as(const char filename[]);
 
     pix_pos to_pix(point p);
     point to_affine(point p);
@@ -87,6 +88,23 @@ class canvas_2d {
     range y;
     pix_pos origin;
 };
+
+class line {
+  public:
+    line(point ini_, point end_) {
+        ini = ini_;
+        end = end_;
+    }
+    line(point ini_, point end_, pix color_) {
+        ini = ini_;
+        end = end_;
+        color = color_;
+    }
+    point ini;
+    point end;
+    pix color{Black};
+};
+canvas_2d &operator<<(canvas_2d &target, line L);
 
 class func_1var {
   public:
