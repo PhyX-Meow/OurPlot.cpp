@@ -98,54 +98,50 @@ canvas_2d &operator<<(canvas_2d &target, func_para curve) {
         target << line({curve.func_x(t), curve.func_y(t)}, {curve.func_x(t + precis), curve.func_y(t + precis)}, color);
     return target;
 }
-int canvas::save_as(const char filename[]) {
-    return bmp_write(data, filename);
+
+double get_tick(double length) {
+    length /= 15.0;
+    double tmp = log10(length);
+    int pow = i_floor(tmp);
+    tmp -= pow;
+    double ans{1.0};
+    if (pow > 0)
+        for (int i{0}; i < pow; ++i)
+            ans *= 10.0;
+    else
+        for (int i{0}; i > pow; --i)
+            ans /= 10.0;
+    if (log10(2.0) < tmp && tmp < log10(5.0))
+        ans *= 2.0;
+    else if (log10(5.0) < tmp)
+        ans *= 5.0;
+    return ans;
 }
 
-//void canvas_2d::drawnumber(point start, int number, char o) {
-//   int i = 0, j = 0, digits = 0, a[3];
-//    double  = ;
-//   pix_pos start1 = to_pix(start);
-//    if (number <= 0) {
-//        digits++;
-//        number = -number;
-//    }
-//    while (number > 0) {
-//        a[i] = number % 10;
-//        i++;
-//        number = number / 10;
-//        digits++;
-//    }
-//    point shift = {0, 0};
-//   if (o == 'x') {shift={-,-0.2};
-//   }
-//  if (o == 'y') {
-//  }
-//  if (o != 'x' && o != 'y') {
-//      return;
-//   }
-//};
+void canvas_2d::draw_axes() {
+    float_pos left{0.5 - origin.clm, 0}, right{width() - 0.5 - origin.clm, 0}, up{0, height() - 0.5 - origin.row}, down{0, 0.5 - origin.row};
 
-void canvas_2d::axes() {
-    point o = to_affine(origin), left = {x.min / 1, 0}, right = {x.max / 1, 0}, up = {0, y.max / 1}, down = {0, y.min / 1}, little1 = {0, 0.1}, little2 = {0.1, 0}, fix = {-0.5, -0.5};
-    float_pos right1 = {x.max / 1 - 0.2, 0.2}, right2 = {x.max / 1 - 0.2, -0.2}, up1 = {-0.2, y.max / 1 - 0.2}, up2 = {0.2, y.max / 1 - 0.2};
-    int i; //k, num1 = x.length() / 2, num2 = y.length() / 2;
-    o = o + fix;
-    draw_line(o + left, o + right, Black, thin);
-    draw_line(o + down, o + up, Black, thin);
-    draw_line(o + up, o + up1, Black, thin);
-    draw_line(o + up, o + up2, Black, thin);
-    draw_line(o + right, o + right1, Black, thin);
-    draw_line(o + right, o + right2, Black, thin);
-    point unitx = {1, 0}, unity = {0, 1};
-    for (i = x.min / 1; i < x.max / 1 - 1; i++) {
-        left = left + unitx;
-        draw_line(o + left, o + left + little1, Black, thin);
-        //    drawnumber(o + left, i, 'x');
-    }
-    for (i = y.min / 1; i < y.max / 1 - 1; i++) {
-        down = down + unity;
-        draw_line(o + down, o + down + little2, Black, thin);
-        //    drawnumber(o + down, i, 'x');
-    }
+    draw_line(left, right, Black, thin);
+    draw_line(down, up, Black, thin);
+
+    double tick_x{get_tick(x.length()) / step_x}, tick_y{get_tick(y.length()) / step_y};
+    double tick_height{4};
+
+    if (origin.clm <= width())
+        for (double i = tick_x; i < right.x; i += tick_x)
+            draw_line({i, 0}, {i, tick_height}, Black);
+    if (origin.clm > 0)
+        for (double i = -tick_x; i > left.x; i -= tick_x)
+            draw_line({i, 0}, {i, tick_height}, Black);
+    if (origin.row <= width())
+        for (double i = tick_y; i < up.y; i += tick_y)
+            draw_line({0, i}, {tick_height, i}, Black);
+    if (origin.row > 0)
+        for (double i = -tick_y; i > down.y; i -= tick_y)
+            draw_line({0, i}, {tick_height, i}, Black);
+
+    draw_line({right.x - 8, 8}, right, Black);
+    draw_line({right.x - 8, -8}, right, Black);
+    draw_line({8, up.y - 8}, up, Black);
+    draw_line({-8, up.y - 8}, up, Black);
 };
