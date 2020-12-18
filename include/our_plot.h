@@ -83,12 +83,15 @@ class canvas_2d {
     point to_affine(point p);
     point to_affine(pix_pos pos);
 
+    void axes();
+    void drawnumber(point start, int number, char o);
+
     double step_x;
     double step_y;
 
     range x;
     range y;
-    pix_pos origin;
+    pix_pos origin = {0, 0};
 };
 
 class line {
@@ -154,8 +157,5 @@ class func_para {
     double precis{0.1};
 };
 canvas_2d &operator<<(canvas_2d &target, func_para shape);
-
-class axes {
-};
 
 #endif

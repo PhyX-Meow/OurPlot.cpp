@@ -1,5 +1,6 @@
 #include "../include/bmp_io.h"
 #include "../include/our_plot.h"
+#include <iostream>
 
 canvas_2d::canvas_2d(int width, int height, range x_, range y_) {
     data = img2d(height, pixrow(width, White));
@@ -110,3 +111,51 @@ canvas_2d &operator<<(canvas_2d &target, func_para curve) {
 int canvas_2d::save_as(const char filename[]) {
     return bmp_write(data, filename);
 }
+
+//void canvas_2d::drawnumber(point start, int number, char o) {
+//   int i = 0, j = 0, digits = 0, a[3];
+//    double  = ;
+//   pix_pos start1 = to_pix(start);
+//    if (number <= 0) {
+//        digits++;
+//        number = -number;
+//    }
+//    while (number > 0) {
+//        a[i] = number % 10;
+//        i++;
+//        number = number / 10;
+//        digits++;
+//    }
+//    point shift = {0, 0};
+//   if (o == 'x') {shift={-,-0.2};
+//   }
+//  if (o == 'y') {
+//  }
+//  if (o != 'x' && o != 'y') {
+//      return;
+//   }
+//};
+
+void canvas_2d::axes() {
+    point o = to_affine(origin), left = {x.min / 1, 0}, right = {x.max / 1, 0}, up = {0, y.max / 1}, down = {0, y.min / 1}, little1 = {0, 0.1}, little2 = {0.1, 0}, fix = {-0.5, -0.5};
+    point right1 = {x.max / 1 - 0.2, 0.2}, right2 = {x.max / 1 - 0.2, -0.2}, up1 = {-0.2, y.max / 1 - 0.2}, up2 = {0.2, y.max / 1 - 0.2};
+    int i; //k, num1 = x.length() / 2, num2 = y.length() / 2;
+    o = o + fix;
+    draw_line(o + left, o + right, Black, thin);
+    draw_line(o + down, o + up, Black, thin);
+    draw_line(o + up, o + up1, Black, thin);
+    draw_line(o + up, o + up2, Black, thin);
+    draw_line(o + right, o + right1, Black, thin);
+    draw_line(o + right, o + right2, Black, thin);
+    point unitx = {1, 0}, unity = {0, 1};
+    for (i = x.min / 1; i < x.max / 1 - 1; i++) {
+        left = left + unitx;
+        draw_line(o + left, o + left + little1, Black, thin);
+        //    drawnumber(o + left, i, 'x');
+    }
+    for (i = y.min / 1; i < y.max / 1 - 1; i++) {
+        down = down + unity;
+        draw_line(o + down, o + down + little2, Black, thin);
+        //    drawnumber(o + down, i, 'x');
+    }
+};

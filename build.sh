@@ -1,1 +1,1 @@
-clang++ -std=gnu++20 -stdlib=libc++ -fuse-ld=lld -Wall -O2 ./src/*.cpp -o test.out
+g++ -std=gnu++20 -fuse-ld=lld -Wall -O2 ./src/bmp_io.cpp ./src/canvas_2d.cpp ./src/canvas_3d.cpp ./src/test_main.cpp -o test.exe
