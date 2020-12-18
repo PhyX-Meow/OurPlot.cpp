@@ -3,7 +3,7 @@
 
 #include "plot_basic.h"
 #include <fstream>
-#include <sstream>
+#include <iostream>
 
 struct bmp_head {
     char id[2]{'B', 'M'};
@@ -23,8 +23,7 @@ struct dib_head {
     int zero[4]{0, 0, 0, 0};
 };
 
-/* BMP 读写 数组按先行后列，从左下到右上表示图像数据 */
+/* BMP 写入文件 数组按先行后列，从左下到右上表示图像数据 */
 int bmp_write(img2d &data, const char filename[]);
-int bmp_read(img2d &data, const char filename[]);
 
 #endif
