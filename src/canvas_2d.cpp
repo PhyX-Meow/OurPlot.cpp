@@ -121,8 +121,10 @@ double get_tick(double length) {
 void canvas_2d::draw_axes() {
     float_pos left{0.5 - origin.clm, 0}, right{width() - 0.5 - origin.clm, 0}, up{0, height() - 0.5 - origin.row}, down{0, 0.5 - origin.row};
 
-    draw_line(left, right, Black, thin);
-    draw_line(down, up, Black, thin);
+    if (origin.clm >= 0 && origin.clm <= width())
+        draw_line(left, right, Black, thin);
+    if (origin.row >= 0 && origin.row <= height())
+        draw_line(down, up, Black, thin);
 
     double tick_x{get_tick(x.length()) / step_x}, tick_y{get_tick(y.length()) / step_y};
     double tick_height{4};
