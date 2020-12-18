@@ -109,6 +109,7 @@ class canvas {
 
     void draw_line(float_pos ini, float_pos end, pix color, plot_style style = thin);
     int save_as(const char filename[]);
+    int attach(pix_pos base, const char filename[]);
 
     pix_pos origin;
 };

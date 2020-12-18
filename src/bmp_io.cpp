@@ -29,7 +29,16 @@ int bmp_write(img2d &data, const char filename[]) {
     return 0;
 }
 
-int bmp_read(img2d &data, const char filename[]) {
+int canvas::save_as(const char filename[]) {
+    int failed = bmp_write(data, filename);
+    if (failed)
+        return failed;
+    // 反馈用户写入文件正常结束
+    std::cout << "Writing Picture to " << filename << " Success!" << std::endl;
+    return 0;
+}
+
+int canvas::attach(pix_pos base, const char filename[]) {
     std::ifstream file(filename, std::ios::binary);
     int height, width;
     file.seekg(18, std::ios::beg);
@@ -37,18 +46,9 @@ int bmp_read(img2d &data, const char filename[]) {
     file.read(reinterpret_cast<char *>(&height), 4);
     int offset = width % 4;
     for (int i = 0; i < height; i++) {
-        file.read(reinterpret_cast<char *>(data[i].data()), 3 * width);
+        file.read(reinterpret_cast<char *>(data[i + base.row].data() + base.clm), 3 * width);
         file.seekg(offset, std::ios::cur);
     }
     file.close();
-    return 0;
-}
-
-int canvas::save_as(const char filename[]) {
-    int failed = bmp_write(data, filename);
-    if (failed)
-        return failed;
-    // 反馈用户写入文件正常结束
-    std::cout << "Writing Picture to " << filename << " Success!" << std::endl;
     return 0;
 }
