@@ -98,3 +98,52 @@ canvas_2d &operator<<(canvas_2d &target, func_para curve) {
         target << line({curve.func_x(t), curve.func_y(t)}, {curve.func_x(t + precis), curve.func_y(t + precis)}, color);
     return target;
 }
+
+double get_tick(double length) {
+    length /= 15.0;
+    double tmp = log10(length);
+    int pow = i_floor(tmp);
+    tmp -= pow;
+    double ans{1.0};
+    if (pow > 0)
+        for (int i{0}; i < pow; ++i)
+            ans *= 10.0;
+    else
+        for (int i{0}; i > pow; --i)
+            ans /= 10.0;
+    if (log10(2.0) < tmp && tmp < log10(5.0))
+        ans *= 2.0;
+    else if (log10(5.0) < tmp)
+        ans *= 5.0;
+    return ans;
+}
+
+void canvas_2d::draw_axes() {
+    float_pos left{0.5 - origin.clm, 0}, right{width() - 0.5 - origin.clm, 0}, up{0, height() - 0.5 - origin.row}, down{0, 0.5 - origin.row};
+
+    if (origin.clm >= 0 && origin.clm <= width())
+        draw_line(left, right, Black, thin);
+    if (origin.row >= 0 && origin.row <= height())
+        draw_line(down, up, Black, thin);
+
+    double tick_x{get_tick(x.length()) / step_x}, tick_y{get_tick(y.length()) / step_y};
+    double tick_height{4};
+
+    if (origin.clm <= width())
+        for (double i = tick_x; i < right.x; i += tick_x)
+            draw_line({i, 0}, {i, tick_height}, Black);
+    if (origin.clm > 0)
+        for (double i = -tick_x; i > left.x; i -= tick_x)
+            draw_line({i, 0}, {i, tick_height}, Black);
+    if (origin.row <= width())
+        for (double i = tick_y; i < up.y; i += tick_y)
+            draw_line({0, i}, {tick_height, i}, Black);
+    if (origin.row > 0)
+        for (double i = -tick_y; i > down.y; i -= tick_y)
+            draw_line({0, i}, {tick_height, i}, Black);
+
+    draw_line({right.x - 8, 8}, right, Black);
+    draw_line({right.x - 8, -8}, right, Black);
+    draw_line({8, up.y - 8}, up, Black);
+    draw_line({-8, up.y - 8}, up, Black);
+};
