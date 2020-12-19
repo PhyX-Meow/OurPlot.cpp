@@ -78,7 +78,8 @@ canvas_2d &operator<<(canvas_2d &target, func_1var curve) {
     for (double t = target.x.min - target.step_x; t < target.x.max + target.step_x; t += precis) {
         d = (curve.func(t + (1e-5)) - curve.func(t)) / (1e-5);
         precis = d > 1 ? curve.precis / d : curve.precis;
-        precis = std::max(precis, 1e-9);
+        precis = std::max(precis, target.step_x / 8);
+        if (abs_d(curve.func(t + precis) - curve.func(t)) / precis > (double) target.height() / 3) continue;
         target << line({t, curve.func(t)}, {t + precis, curve.func(t + precis)}, color);
     }
     return target;
