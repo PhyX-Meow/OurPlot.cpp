@@ -2,6 +2,7 @@
 #define _PLOT_BASIC_
 
 #include <cmath>
+#include <string>
 #include <vector>
 
 const double pi = M_PI;
@@ -108,8 +109,8 @@ class canvas {
     }
 
     void draw_line(float_pos ini, float_pos end, pix color, plot_style style = thin);
-    int save_as(const char filename[]);
-    int attach(pix_pos base, const char filename[]);
+    int save_as(std::string filename);
+    int attach(pix_pos base, std::string filename);
 
     pix_pos origin;
 };

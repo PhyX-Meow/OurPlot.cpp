@@ -1,6 +1,6 @@
 #include "../include/bmp_io.h"
 
-int bmp_write(img2d &data, const char filename[]) {
+int bmp_write(img2d &data, std::string filename) {
     int height = data.size(), width = data[0].size();
     int offset = width % 4;
     int datasize = (width * 3 + offset) * height;
@@ -29,7 +29,7 @@ int bmp_write(img2d &data, const char filename[]) {
     return 0;
 }
 
-int canvas::save_as(const char filename[]) {
+int canvas::save_as(std::string filename) {
     int failed = bmp_write(data, filename);
     if (failed)
         return failed;
@@ -38,12 +38,15 @@ int canvas::save_as(const char filename[]) {
     return 0;
 }
 
-int canvas::attach(pix_pos base, const char filename[]) {
+int canvas::attach(pix_pos base, std::string filename) {
     std::ifstream file(filename, std::ios::binary);
+    if (!file.is_open())
+        return -1;
     int height, width;
     file.seekg(18, std::ios::beg);
     file.read(reinterpret_cast<char *>(&width), 4);
     file.read(reinterpret_cast<char *>(&height), 4);
+    file.seekg(0x36, std::ios::beg);
     int offset = width % 4;
     for (int i = 0; i < height; i++) {
         file.read(reinterpret_cast<char *>(data[i + base.row].data() + base.clm), 3 * width);
