@@ -40,10 +40,13 @@ int canvas::save_as(std::string filename) {
 
 int canvas::attach(pix_pos base, std::string filename) {
     std::ifstream file(filename, std::ios::binary);
+    if (!file.is_open())
+        return -1;
     int height, width;
     file.seekg(18, std::ios::beg);
     file.read(reinterpret_cast<char *>(&width), 4);
     file.read(reinterpret_cast<char *>(&height), 4);
+    file.seekg(0x36, std::ios::beg);
     int offset = width % 4;
     for (int i = 0; i < height; i++) {
         file.read(reinterpret_cast<char *>(data[i + base.row].data() + base.clm), 3 * width);
