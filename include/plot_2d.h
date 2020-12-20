@@ -35,7 +35,7 @@ class canvas_2d : public canvas {
     double step_x;
     double step_y;
     void draw_axes();
-    void draw_number(pix_pos base, double num);
+    void draw_number(pix_pos base, double number, char kind);
 
     range x;
     range y;

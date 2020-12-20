@@ -163,7 +163,7 @@ canvas_2d &operator<<(canvas_2d &target, func_para curve) {
 }
 
 double get_tick(double length) {
-    length /= 15.0;
+    length /= 7.5;
     double tmp = log10(length);
     int pow = i_floor(tmp);
     tmp -= pow;
@@ -181,6 +181,66 @@ double get_tick(double length) {
     return ans;
 }
 
+void canvas_2d::draw_number(pix_pos base, double number, char kind) {
+    int sign = number > 0 ? 1 : -1;
+    int number_int = i_floor(number * 10), digits = 0;
+    std::string filename = "./img/0_20pt.bmp";
+    if (kind != 'x' && kind != 'y') {
+        return;
+    }
+    if (number_int % 10 == 0) {
+        if (sign < 0) {
+            digits++;
+            number_int = -number_int;
+        }
+        number_int = number_int / 10;
+        std::string number_s = std::to_string(number_int);
+        digits += number_s.length();
+        if (kind == 'x') {
+            base = base.add(-5 * digits, -20);
+        } else {
+            base = base.add(-10 * digits - 5, -7);
+        }
+        if (sign < 0) {
+            canvas::attach(base, "./img/minus_20pt.bmp");
+            digits--;
+            base = base.add(10, 0);
+        }
+        for (int i = 0; i < digits; i++) {
+            filename[6] = number_s[i];
+            canvas::attach(base, filename);
+            base = base.add(10, 0);
+        }
+    } else {
+        digits++;
+        if (sign < 0) {
+            digits++;
+            number_int = -number_int;
+        }
+        std::string number_s = std::to_string(number_int);
+        digits += number_s.length();
+        if (kind == 'x') {
+            base = base.add(-5 * digits, -20);
+        } else {
+            base = base.add(-10 * digits - 5, -7);
+        }
+        if (sign < 0) {
+            canvas::attach(base, "./img/minus_20pt.bmp");
+            digits--;
+        }
+        for (int i = 0; i < digits; i++) {
+            if (i == digits - 2) {
+                canvas::attach(base, "./img/dot_20pt.bmp");
+                base = base.add(10, 0);
+            } else {
+                filename[6] = number_s[i];
+                canvas::attach(base, filename);
+                base = base.add(10, 0);
+            }
+        }
+    }
+}
+
 void canvas_2d::draw_axes() {
     float_pos left{0.5 - origin.clm, 0}, right{width() - 0.5 - origin.clm, 0}, up{0, height() - 0.5 - origin.row}, down{0, 0.5 - origin.row};
 
@@ -193,17 +253,25 @@ void canvas_2d::draw_axes() {
     double tick_height{4};
 
     if (origin.clm <= width())
-        for (double i = tick_x; i < right.x; i += tick_x)
+        for (double i = tick_x; i < right.x; i += tick_x) {
             draw_line({i, 0}, {i, tick_height}, Black);
+            draw_number(to_pix({i, 0}), i * step_x, 'x');
+        }
     if (origin.clm > 0)
-        for (double i = -tick_x; i > left.x; i -= tick_x)
+        for (double i = -tick_x; i > left.x; i -= tick_x) {
             draw_line({i, 0}, {i, tick_height}, Black);
+            draw_number(to_pix({i, 0}), i * step_x, 'x');
+        }
     if (origin.row <= width())
-        for (double i = tick_y; i < up.y; i += tick_y)
+        for (double i = tick_y; i < up.y; i += tick_y) {
             draw_line({0, i}, {tick_height, i}, Black);
+            draw_number(to_pix({0, i}), i * step_y, 'y');
+        }
     if (origin.row > 0)
-        for (double i = -tick_y; i > down.y; i -= tick_y)
+        for (double i = -tick_y; i > down.y; i -= tick_y) {
             draw_line({0, i}, {tick_height, i}, Black);
+            draw_number(to_pix({0, i}), i * step_y, 'y');
+        }
 
     draw_line({right.x - 8, 8}, right, Black);
     draw_line({right.x - 8, -8}, right, Black);
