@@ -59,6 +59,14 @@ struct pix {
         tmp.b = static_cast<char>(tmp.b * k);
         return ~tmp;
     }
+    pix operator+(pix x) {
+        pix tmp = ~(*this);
+        x = ~x;
+        tmp.r = (tmp.r + x.r);
+        tmp.g = (tmp.g + x.g);
+        tmp.b = (tmp.b + x.b);
+        return ~tmp;
+    }
 };
 
 const pix White(0xFFFFFF);
