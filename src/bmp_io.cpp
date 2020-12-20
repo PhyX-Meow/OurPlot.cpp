@@ -47,6 +47,8 @@ int canvas::save_as(const char *filename) {
 }
 
 int canvas::attach(std::string filename) {
+    if (!contains(pen))
+        return 0;
     std::ifstream file(filename, std::ios::binary);
     if (!file.is_open())
         return -1;
