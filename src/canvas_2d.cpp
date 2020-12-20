@@ -18,13 +18,13 @@ double capsuleSDF(float_pos pt, float_pos ini, float_pos end, double r) {
     double c{sqrt(dist * dist) - r};
     return std::max(std::min(0.5 - c, 1.0), 0.0);
 }
-
+/*
 pix alphablend(pix p, pix color_new, double alpha) {
     p.r = (unsigned char) (p.r * (1 - alpha) + color_new.r * alpha * 255);
     p.g = (unsigned char) (p.g * (1 - alpha) + color_new.g * alpha * 255);
     p.b = (unsigned char) (p.b * (1 - alpha) + color_new.b * alpha * 255);
     return p;
-}
+}*/
 void canvas::draw_line(float_pos ini, float_pos end, pix color, plot_style style) {
     double r;
     if (style == thin)
