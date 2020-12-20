@@ -1,7 +1,9 @@
 #ifndef _PLOT_BASIC_
 #define _PLOT_BASIC_
 
+#define FMT_HEADER_ONLY
 #include "fmt/core.h"
+#include "fmt/format.h"
 #include <cmath>
 #include <string>
 #include <vector>
