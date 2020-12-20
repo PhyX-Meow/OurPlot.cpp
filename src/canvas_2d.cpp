@@ -217,6 +217,9 @@ void canvas_2d::draw_number(pix_pos base, double number, char kind) {
             digits++;
             number_int = -number_int;
         }
+        if (std::abs(number_int) < 10) {
+            digits++;
+        }
         std::string number_s = std::to_string(number_int);
         digits += number_s.length();
         if (kind == 'x') {
@@ -227,15 +230,31 @@ void canvas_2d::draw_number(pix_pos base, double number, char kind) {
         if (sign < 0) {
             canvas::attach(base, "./img/minus_20pt.bmp");
             digits--;
+            base = base.add(10, 0);
         }
-        for (int i = 0; i < digits; i++) {
-            if (i == digits - 2) {
-                canvas::attach(base, "./img/dot_20pt.bmp");
-                base = base.add(10, 0);
-            } else {
-                filename[6] = number_s[i];
-                canvas::attach(base, filename);
-                base = base.add(10, 0);
+        if (number_int < 10) {
+            canvas::attach(base, "./img/0_20pt.bmp");
+            base = base.add(10, 0);
+            canvas::attach(base, "./img/dot_20pt.bmp");
+            base = base.add(10, 0);
+            filename[6] = number_s[0];
+            canvas::attach(base, filename);
+            base = base.add(10, 0);
+        } else {
+            for (int i = 0; i < digits; i++) {
+                if (i == digits - 2) {
+                    canvas::attach(base, "./img/dot_20pt.bmp");
+                    base = base.add(10, 0);
+                }
+                if (i < digits - 2) {
+                    filename[6] = number_s[i];
+                    canvas::attach(base, filename);
+                    base = base.add(10, 0);
+                }
+                if (i == digits - 1) {
+                    filename[6] = number_s[i - 1];
+                    canvas::attach(base, filename);
+                }
             }
         }
     }
