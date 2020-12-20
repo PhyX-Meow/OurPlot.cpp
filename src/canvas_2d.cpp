@@ -182,53 +182,53 @@ double get_tick(double length) {
 }
 
 void canvas_2d::draw_number(pix_pos base, double number, char kind, int sign) {
-    int i = 0, number_int = number * 10 / 1, figure = 0;
+    int i = 0, number_int = number * 10 / 1, digits = 0;
     std::string filename = "./img/0_20pt.bmp";
     if (kind != 'x' && kind != 'y') {
         return;
     }
     if (number_int % 10 == 0) {
         if (sign < 0) {
-            figure++;
+            digits++;
             number_int = -number_int;
         }
         number_int = number_int / 10;
         std::string number_s = std::to_string(number_int);
-        figure += number_s.length();
+        digits += number_s.length();
         if (kind == 'x') {
-            base = base.add({-5 * figure, -20});
+            base = base.add(-5 * digits, -20);
         } else {
-            base = base.add({-10 * figure - 5, -7});
+            base = base.add(-10 * digits - 5, -7);
         }
         if (sign < 0) {
             canvas::attach(base, "./img/minus_20pt.bmp");
+            digits--;
         }
-        figure--;
         base = base.add(10, 0);
-        for (i = 0; i < figure; i++) {
+        for (i = 0; i < digits; i++) {
             filename[6] = number_s[i];
             canvas::attach(base, filename);
             base = base.add(10, 0);
         }
     } else {
-        figure++;
+        digits++;
         if (sign < 0) {
-            figure++;
+            digits++;
             number_int = -number_int;
         }
         std::string number_s = std::to_string(number_int);
-        figure += number_s.length();
+        digits += number_s.length();
         if (kind == 'x') {
-            base = base.add(-5 * figure, -20);
+            base = base.add(-5 * digits, -20);
         } else {
-            base = base.add({-10 * figure - 5, -7});
+            base = base.add(-10 * digits - 5, -7);
         }
         if (sign < 0) {
             canvas::attach(base, "./img/minus_20pt.bmp");
+            digits--;
         }
-        figure--;
-        for (i = 0; i < figure; i++) {
-            if (i == figure - 2) {
+        for (i = 0; i < digits; i++) {
+            if (i == digits - 2) {
                 canvas::attach(base, "./img/dot_20pt.bmp");
                 base = base.add(10, 0);
             } else {
