@@ -19,23 +19,21 @@ double capsuleSDF(float_pos pt, float_pos ini, float_pos end, double r) {
     return std::max(std::min(0.5 - c, 1.0), 0.0);
 }
 
-pix alphabend(pix p, pix color_new, double alpha) {
+pix alphablend(pix p, pix color_new, double alpha) {
     p.r = (unsigned char) (p.r * (1 - alpha) + color_new.r * alpha * 255);
     p.g = (unsigned char) (p.g * (1 - alpha) + color_new.g * alpha * 255);
     p.b = (unsigned char) (p.b * (1 - alpha) + color_new.b * alpha * 255);
     return p;
 }
 void canvas::draw_line(float_pos ini, float_pos end, pix color, plot_style style) {
-    //first step: affine trans.
     double r{1};
     pix_pos start = to_pix({std::min(ini.x, end.x) - r, std::min(ini.y, end.y) - r});
     pix_pos ending = to_pix({std::max(ini.x, end.x) + r, std::max(ini.y, end.y) + r});
-    //second step: search responding pixel positions
     for (int x = start.clm; x <= ending.clm; ++x) {
-        for (int y = start.row; y <= start.row; ++y) {
+        for (int y = start.row; y <= ending.row; ++y) {
             float_pos aff = to_affine({x, y});
             if (contains({x, y})) {
-                (*this)[{x, y}] = alphabend((*this)[{x, y}], color, (capsuleSDF(aff, ini, end, r)));
+                (*this)[{x, y}] = (*this)[{x, y}].min(color * (capsuleSDF(aff, ini, end, r)));
             }
         }
     }
@@ -45,8 +43,9 @@ void canvas::draw_line(float_pos ini, float_pos end, pix color, plot_style style
 
 void canvas::draw_line(float_pos ini, float_pos end, pix color, plot_style style) {
     //first step: affine trans.
+    double r{1};
     pix_pos start = to_pix(ini), ending = to_pix(end);
-    double slope, c, dist2;
+    double slope, c;
     slope = (end.y - ini.y) / (end.x - ini.x);
 
     pix_pos centre;
@@ -61,15 +60,12 @@ void canvas::draw_line(float_pos ini, float_pos end, pix color, plot_style style
             centre = to_pix({t, h});
 
             //last step: for every pixel position, paint 9*9 square
-            for (int i = -1; i <= 1; i++)
-                for (int j = -1; j <= 1; j++) {
+            for (int i = -5; i <= 5; i++)
+                for (int j = -5; j <= 5; j++) {
                     float_pos aff = to_affine(centre.add(i, j));
-                    dist2 = (aff.x * slope + c - aff.y) * (aff.x * slope + c - aff.y) / (slope * slope + 1);
+                    //dist2 = (aff.x * slope + c - aff.y) * (aff.x * slope + c - aff.y) / (slope * slope + 1);
                     if (contains(centre.add(i, j))) {
-                        if (dist2 <= 0.5)
-                            (*this)[centre.add(i, j)] = color;
-                        else if (dist2 <= 1)
-                            (*this)[centre.add(i, j)] = color * 0.5;
+                        (*this)[centre.add(i, j)] = (*this)[centre.add(i, j)].min(color * (capsuleSDF(aff, ini, end, r)));
                     }
                 }
         }
@@ -83,21 +79,18 @@ void canvas::draw_line(float_pos ini, float_pos end, pix color, plot_style style
             double h = slope * t + c;
             centre = to_pix({h, t});
 
-            for (int i = -1; i <= 1; i++)
-                for (int j = -1; j <= 1; j++) {
+            for (int i = -5; i <= 5; i++)
+                for (int j = -5; j <= 5; j++) {
                     float_pos aff = to_affine(centre.add(i, j));
-                    dist2 = (aff.y * slope + c - aff.x) * (aff.y * slope + c - aff.x) / (slope * slope + 1);
+                    //dist2 = (aff.y * slope + c - aff.x) * (aff.y * slope + c - aff.x) / (slope * slope + 1);
                     if (contains(centre.add(i, j))) {
-                        if (dist2 <= 0.5)
-                            (*this)[centre.add(i, j)] = color;
-                        else if (dist2 <= 1)
-                            (*this)[centre.add(i, j)] = color * 0.5;
+                        (*this)[centre.add(i, j)] = (*this)[centre.add(i, j)].min(color * (capsuleSDF(aff, ini, end, r)));
                     }
                 }
         }
     }
-}*/
-
+}
+*/
 canvas_2d &operator<<(canvas_2d &target, line L) {
     float_pos ini{target.to_affine(L.ini)}, end{target.to_affine(L.end)};
     target.draw_line(ini, end, L.color);
@@ -138,7 +131,7 @@ canvas_2d &operator<<(canvas_2d &target, func_para curve) {
 }
 
 double get_tick(double length) {
-    length /= 15.0;
+    length /= 7.5;
     double tmp = log10(length);
     int pow = i_floor(tmp);
     tmp -= pow;
