@@ -45,6 +45,13 @@ struct pix {
     pix operator~() {
         return pix(~r, ~g, ~b);
     }
+    pix min(pix color) {
+        pix tmp = (*this);
+        tmp.r = tmp.r < color.r ? tmp.r : color.r;
+        tmp.g = tmp.g < color.g ? tmp.g : color.g;
+        tmp.b = tmp.b < color.b ? tmp.b : color.b;
+        return tmp;
+    }
     pix operator*(double k) {
         pix tmp = ~(*this);
         tmp.r = static_cast<char>(tmp.r * k);
@@ -76,7 +83,25 @@ struct pix_pos {
         return {clm + n, row + m};
     }
 };
-
+struct vector_2d {
+    double x;
+    double y;
+    double operator*(vector_2d &a) {
+        return a.x * (*this).x + a.y * (*this).y;
+    }
+    vector_2d operator*(double &c) {
+        return {(*this).x * c, (*this).y * c};
+    }
+    vector_2d operator-(vector_2d &a) {
+        return {(*this).x - a.x, (*this).y - a.y};
+    }
+    vector_2d proj_to(vector_2d &a, double min, double max) {
+        double c{((*this) * a / (a * a))};
+        c = c > min ? c : min;
+        c = c < max ? c : max;
+        return a * c;
+    }
+};
 struct float_pos {
     double x;
     double y;
