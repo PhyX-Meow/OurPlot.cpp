@@ -11,6 +11,63 @@ canvas_2d::canvas_2d(int width, int height, range x_, range y_) {
     origin.row = i_floor(-y_.min / y_.length() * height);
 }
 
+double capsuleSDF(float_pos pt, float_pos ini, float_pos end, double r) {
+    vector_2d ini_pt{pt.x - ini.x, pt.y - ini.y}, ini_end{end.x - ini.x, end.y - ini.y};
+    vector_2d proj_pt{ini_pt.proj_to(ini_end, 0.0, 1.0)};
+    vector_2d dist{ini_pt - proj_pt};
+    double c{sqrt(dist * dist) - r};
+    return std::min(0.5 - c, 1.0);
+}
+/*
+void canvas::draw_line(float_pos ini, float_pos end, pix color, plot_style style) {
+    //first step: affine trans.
+    pix_pos start = to_pix(ini), ending = to_pix(end);
+    double slope, c;
+    slope = (end.y - ini.y) / (end.x - ini.x);
+
+    pix_pos centre;
+    //second step: search responding pixel positions
+    if (abs_d(slope) <= 1.0) {
+        c = ini.y - slope * ini.x;
+        if (ini.x > end.x)
+            std::swap(ini, end), std::swap(start, ending);
+        for (int i = start.clm; i <= ending.clm; ++i) {
+            double t = to_affine(pix_pos{i, origin.row}).x;
+            double h = slope * t + c;
+            centre = to_pix({t, h});
+            //last step: for every pixel position, paint 9*9 square
+            for (int i = -2; i <= 2; i++)
+                for (int j = -2; j <= 2; j++) {
+                    float_pos aff = to_affine(centre.add(i, j));
+                    if (contains(centre.add(i, j))) {
+                        //(*this)[centre.add(i, j)] = color * (capsuleSDF(aff, ini, end, 2.0));
+                        (*this)[centre.add(i, j)] = (*this)[centre.add(i, j)].min(color * (capsuleSDF(aff, ini, end, 1)));
+                    }
+                }
+        }
+    } else {
+        slope = (end.x - ini.x) / (end.y - ini.y);
+        c = ini.x - ini.y * slope;
+        if (ini.y > end.y)
+            std::swap(ini, end), std::swap(start, ending);
+        for (int i = start.row; i <= ending.row; ++i) {
+            double t = to_affine(pix_pos{origin.clm, i}).y;
+            double h = slope * t + c;
+            centre = to_pix({h, t});
+            for (int i = -2; i <= 2; i++)
+                for (int j = -2; j <= 2; j++) {
+                    float_pos aff = to_affine(centre.add(i, j));
+                    if (contains(centre.add(i, j))) {
+                        //(*this)[centre.add(i, j)] = color * (capsuleSDF(aff, ini, end, 2.0));
+                        (*this)[centre.add(i, j)] = (*this)[centre.add(i, j)].min(color * (capsuleSDF(aff, ini, end, 1)));
+                    }
+                }
+        }
+    }
+}
+
+*/
+
 void canvas::draw_line(float_pos ini, float_pos end, pix color, plot_style style) {
     //first step: affine trans.
     pix_pos start = to_pix(ini), ending = to_pix(end);
@@ -74,8 +131,14 @@ canvas_2d &operator<<(canvas_2d &target, line L) {
 canvas_2d &operator<<(canvas_2d &target, func_1var curve) {
     pix color = curve.color;
     double precis = curve.precis;
-    for (double t = target.x.min - target.step_x; t < target.x.max + target.step_x; t += precis)
+    double d;
+    for (double t = target.x.min - target.step_x; t < target.x.max + target.step_x; t += precis) {
+        d = (curve.func(t + (1e-5)) - curve.func(t)) / (1e-5);
+        precis = d > 1 ? curve.precis / d : curve.precis;
+        precis = std::max(precis, target.step_x / 8);
+        if (abs_d(curve.func(t + precis) - curve.func(t)) / precis > (double) target.height() / 3) continue;
         target << line({t, curve.func(t)}, {t + precis, curve.func(t + precis)}, color);
+    }
     return target;
 }
 canvas_2d &operator<<(canvas_2d &target, func_polar curve) {

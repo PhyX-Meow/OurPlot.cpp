@@ -23,7 +23,6 @@ struct dib_head {
     int zero[4]{0, 0, 0, 0};
 };
 
-/* BMP 写入文件 数组按先行后列，从左下到右上表示图像数据 */
-int bmp_write(img2d &data, const char filename[]);
+int bmp_write(img2d &data, std::string filename);
 
 #endif
