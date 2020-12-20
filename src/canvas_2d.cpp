@@ -181,8 +181,9 @@ double get_tick(double length) {
     return ans;
 }
 
-void canvas_2d::draw_number(pix_pos base, double number, char kind, int sign) {
-    int i = 0, number_int = number * 10 / 1, digits = 0;
+void canvas_2d::draw_number(pix_pos base, double number, char kind) {
+    int sign = number > 0 ? 1 : -1;
+    int number_int = i_floor(number * 10), digits = 0;
     std::string filename = "./img/0_20pt.bmp";
     if (kind != 'x' && kind != 'y') {
         return;
@@ -203,9 +204,9 @@ void canvas_2d::draw_number(pix_pos base, double number, char kind, int sign) {
         if (sign < 0) {
             canvas::attach(base, "./img/minus_20pt.bmp");
             digits--;
+            base = base.add(10, 0);
         }
-        base = base.add(10, 0);
-        for (i = 0; i < digits; i++) {
+        for (int i = 0; i < digits; i++) {
             filename[6] = number_s[i];
             canvas::attach(base, filename);
             base = base.add(10, 0);
@@ -227,7 +228,7 @@ void canvas_2d::draw_number(pix_pos base, double number, char kind, int sign) {
             canvas::attach(base, "./img/minus_20pt.bmp");
             digits--;
         }
-        for (i = 0; i < digits; i++) {
+        for (int i = 0; i < digits; i++) {
             if (i == digits - 2) {
                 canvas::attach(base, "./img/dot_20pt.bmp");
                 base = base.add(10, 0);
@@ -254,22 +255,22 @@ void canvas_2d::draw_axes() {
     if (origin.clm <= width())
         for (double i = tick_x; i < right.x; i += tick_x) {
             draw_line({i, 0}, {i, tick_height}, Black);
-            draw_number(to_pix({i, 0}), i / tick_x, 'x', 1);
+            draw_number(to_pix({i, 0}), i / tick_x, 'x');
         }
     if (origin.clm > 0)
         for (double i = -tick_x; i > left.x; i -= tick_x) {
             draw_line({i, 0}, {i, tick_height}, Black);
-            draw_number(to_pix({i, 0}), i / tick_x, 'x', -1);
+            draw_number(to_pix({i, 0}), i / tick_x, 'x');
         }
     if (origin.row <= width())
         for (double i = tick_y; i < up.y; i += tick_y) {
             draw_line({0, i}, {tick_height, i}, Black);
-            draw_number(to_pix({0, i}), i / tick_y, 'y', 1);
+            draw_number(to_pix({0, i}), i / tick_y, 'y');
         }
     if (origin.row > 0)
         for (double i = -tick_y; i > down.y; i -= tick_y) {
             draw_line({0, i}, {tick_height, i}, Black);
-            draw_number(to_pix({0, i}), i / tick_y, 'y', -1);
+            draw_number(to_pix({0, i}), i / tick_y, 'y');
         }
 
     draw_line({right.x - 8, 8}, right, Black);

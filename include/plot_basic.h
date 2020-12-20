@@ -13,6 +13,7 @@ inline double abs_d(double x) {
 }
 // i_floor : double -> int
 inline int i_floor(double x) {
+    x += 1e-5;
     return x >= 0 ? static_cast<int>(x) : static_cast<int>(x) - 1;
 }
 
