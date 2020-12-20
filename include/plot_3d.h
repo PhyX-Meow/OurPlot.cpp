@@ -8,7 +8,20 @@ struct point_3d {
     double y;
     double z;
 };
-
+struct vector_3d {
+    double x;
+    double y;
+    double z;
+    vector_3d operator+(vector_3d &v) {
+        return {(*this).x + v.x, (*this).y + v.y, (*this).y + v.y};
+    }
+    double operator*(vector_3d &v) {
+        return (*this).x * v.x + (*this).y * v.y + (*this).z * v.z;
+    }
+    /*vector_3d out_prod(vector_3d &v) {
+        return ;
+    }*/
+};
 class line_3d {
     line_3d(point_3d ini_, point_3d end_, pix color_ = Black) {
         ini = ini_;
