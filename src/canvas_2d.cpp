@@ -163,7 +163,7 @@ canvas_2d &operator<<(canvas_2d &target, func_para curve) {
 }
 
 double get_tick(double length) {
-    length /= 15.0;
+    length /= 7.5;
     double tmp = log10(length);
     int pow = i_floor(tmp);
     tmp -= pow;
@@ -255,22 +255,22 @@ void canvas_2d::draw_axes() {
     if (origin.clm <= width())
         for (double i = tick_x; i < right.x; i += tick_x) {
             draw_line({i, 0}, {i, tick_height}, Black);
-            draw_number(to_pix({i, 0}), i / tick_x, 'x');
+            draw_number(to_pix({i, 0}), i * step_x, 'x');
         }
     if (origin.clm > 0)
         for (double i = -tick_x; i > left.x; i -= tick_x) {
             draw_line({i, 0}, {i, tick_height}, Black);
-            draw_number(to_pix({i, 0}), i / tick_x, 'x');
+            draw_number(to_pix({i, 0}), i * step_x, 'x');
         }
     if (origin.row <= width())
         for (double i = tick_y; i < up.y; i += tick_y) {
             draw_line({0, i}, {tick_height, i}, Black);
-            draw_number(to_pix({0, i}), i / tick_y, 'y');
+            draw_number(to_pix({0, i}), i * step_y, 'y');
         }
     if (origin.row > 0)
         for (double i = -tick_y; i > down.y; i -= tick_y) {
             draw_line({0, i}, {tick_height, i}, Black);
-            draw_number(to_pix({0, i}), i / tick_y, 'y');
+            draw_number(to_pix({0, i}), i * step_y, 'y');
         }
 
     draw_line({right.x - 8, 8}, right, Black);
