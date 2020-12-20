@@ -37,8 +37,16 @@ int canvas::save_as(std::string filename) {
     fmt::print("Write image to {} successfully\n", filename);
     return 0;
 }
+int canvas::save_as(const char *filename) {
+    int failed = bmp_write(data, filename);
+    if (failed)
+        return failed;
+    // 反馈用户写入文件正常结束
+    fmt::print("Write image to {} successfully\n", filename);
+    return 0;
+}
 
-int canvas::attach(pix_pos base, std::string filename) {
+int canvas::attach(std::string filename) {
     std::ifstream file(filename, std::ios::binary);
     if (!file.is_open())
         return -1;
@@ -49,7 +57,7 @@ int canvas::attach(pix_pos base, std::string filename) {
     file.seekg(0x36, std::ios::beg);
     int offset = width % 4;
     for (int i = 0; i < height; i++) {
-        file.read(reinterpret_cast<char *>(data[i + base.row].data() + base.clm), 3 * std::min(width, this->width() - base.clm));
+        file.read(reinterpret_cast<char *>(data[i + pen.row].data() + pen.clm), 3 * std::min(width, this->width() - pen.clm));
         file.seekg(offset, std::ios::cur);
     }
     file.close();

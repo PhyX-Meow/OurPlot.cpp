@@ -24,6 +24,12 @@ inline point polar(double r, double th) {
     return point(r * cos(th), r * sin(th));
 }
 
+enum axe_type {
+    X,
+    Y,
+    O
+};
+
 class canvas_2d : public canvas {
   public:
     canvas_2d(int width, int height, range x_, range y_);
@@ -35,7 +41,7 @@ class canvas_2d : public canvas {
     double step_x;
     double step_y;
     void draw_axes();
-    void draw_number(pix_pos base, double number, char kind);
+    void draw_number(pix_pos base, double number, int f_digits, axe_type type);
 
     range x;
     range y;

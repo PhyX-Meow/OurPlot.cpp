@@ -12,7 +12,7 @@ const double pi = M_PI;
 
 // i_floor : double -> int
 inline int i_floor(double x) {
-    x += 1e-5;
+    x += 1e-7;
     return x >= 0 ? static_cast<int>(x) : static_cast<int>(x) - 1;
 }
 
@@ -82,9 +82,8 @@ struct pix_pos {
     pix_pos add(int n, int m) {
         return {clm + n, row + m};
     }
-    void operator+=(const pix_pos &adder) {
-        clm += adder.clm;
-        row += adder.row;
+    pix_pos minus(int n, int m) {
+        return {clm - n, row - m};
     }
 };
 struct vector_2d {
@@ -139,9 +138,11 @@ class canvas {
 
     void draw_line(float_pos ini, float_pos end, pix color, plot_style style = thin);
     int save_as(std::string filename);
-    int attach(pix_pos base, std::string filename);
+    int save_as(const char *filename);
+    int attach(std::string filename);
 
     pix_pos origin;
+    pix_pos pen{0, 0};
 };
 
 #endif
