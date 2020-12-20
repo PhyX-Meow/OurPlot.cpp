@@ -118,6 +118,95 @@ double get_tick(double length) {
     return ans;
 }
 
+int stringlen(std::string s) {
+    int i = 0;
+    while (s[i] != '\0') {
+        i++;
+    }
+    return i;
+}
+
+std::string to_string(int number) {
+    int i = 0, k;
+    std::string reverse, out;
+    if (number == 0) {
+        out = "0";
+        return out;
+    } else {
+        while (number > 0) {
+            out[i] = number % 10;
+            i++;
+            number = number / 10;
+        }
+        out[i] = '\0';
+        reverse[i] = '\0';
+        k = i - 1;
+        for (i = 0; i <= k; i++) {
+            reverse[i] = out[k - i];
+        }
+        return reverse;
+    }
+};
+
+void canvas_2d::draw_number(pix_pos base, double number, char kind, int sign) {
+    int digits[10], i = 0, number_int = number * 10 / 1, figure = 0;
+    std::string filename = "./img/0_20pt.bmp";
+    if (kind != 'x' && kind != 'y') {
+        return;
+    }
+    if (number_int % 10 == 0) {
+        if (sign < 0) {
+            figure++;
+            number_int = -number_int;
+        }
+        number_int = number_int / 10;
+        std::string number_s = to_string(number_int);
+        figure += stringlen(number_s);
+        if (kind == 'x') {
+            base = base.add({-5 * figure, -20});
+        } else {
+            base = base.add({-10 * figure - 5, -7});
+        }
+        if (sign < 0) {
+            canvas::attach(base, "./img/minus_20pt.bmp");
+        }
+        figure--;
+        base = base.add(10, 0);
+        for (i = 0; i < figure; i++) {
+            filename[6] = number_s[i];
+            canvas::attach(base, filename);
+            base = base.add(10, 0);
+        }
+    } else {
+        figure++;
+        if (sign < 0) {
+            figure++;
+            number_int = -number_int;
+        }
+        std::string number_s = to_string(number_int);
+        figure += stringlen(number_s);
+        if (kind == 'x') {
+            base = base.add(-5 * figure, -20);
+        } else {
+            base = base.add({-10 * figure - 5, -7});
+        }
+        if (sign < 0) {
+            canvas::attach(base, "./img/minus_20pt.bmp");
+        }
+        figure--;
+        for (i = 0; i < figure; i++) {
+            if (i == figure - 2) {
+                canvas::attach(base, "./img/dot_20pt.bmp");
+                base = base.add(10, 0);
+            } else {
+                filename[6] = number_s[i];
+                canvas::attach(base, filename);
+                base = base.add(10, 0);
+            }
+        }
+    }
+}
+
 void canvas_2d::draw_axes() {
     float_pos left{0.5 - origin.clm, 0}, right{width() - 0.5 - origin.clm, 0}, up{0, height() - 0.5 - origin.row}, down{0, 0.5 - origin.row};
 
@@ -130,17 +219,25 @@ void canvas_2d::draw_axes() {
     double tick_height{4};
 
     if (origin.clm <= width())
-        for (double i = tick_x; i < right.x; i += tick_x)
+        for (double i = tick_x; i < right.x; i += tick_x) {
             draw_line({i, 0}, {i, tick_height}, Black);
+            draw_number(to_pix({i, 0}), i / tick_x, 'x', 1);
+        }
     if (origin.clm > 0)
-        for (double i = -tick_x; i > left.x; i -= tick_x)
+        for (double i = -tick_x; i > left.x; i -= tick_x) {
             draw_line({i, 0}, {i, tick_height}, Black);
+            draw_number(to_pix({i, 0}), i / tick_x, 'x', -1);
+        }
     if (origin.row <= width())
-        for (double i = tick_y; i < up.y; i += tick_y)
+        for (double i = tick_y; i < up.y; i += tick_y) {
             draw_line({0, i}, {tick_height, i}, Black);
+            draw_number(to_pix({0, i}), i / tick_y, 'y', 1);
+        }
     if (origin.row > 0)
-        for (double i = -tick_y; i > down.y; i -= tick_y)
+        for (double i = -tick_y; i > down.y; i -= tick_y) {
             draw_line({0, i}, {tick_height, i}, Black);
+            draw_number(to_pix({0, i}), i / tick_y, 'y', -1);
+        }
 
     draw_line({right.x - 8, 8}, right, Black);
     draw_line({right.x - 8, -8}, right, Black);
