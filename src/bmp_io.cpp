@@ -34,7 +34,7 @@ int canvas::save_as(std::string filename) {
     if (failed)
         return failed;
     // 反馈用户写入文件正常结束
-    std::cout << "Writing Picture to " << filename << " Success!" << std::endl;
+    fmt::print("Write image to {} successfully\n", filename);
     return 0;
 }
 

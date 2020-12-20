@@ -1,1 +1,1 @@
-rm ./*.bmp ./*.out ./lib/*.so
+rm ./*.bmp ./*.out ./lib/libplot.so ./lib/libplot.dll

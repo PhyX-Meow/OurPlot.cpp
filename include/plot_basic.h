@@ -1,6 +1,7 @@
 #ifndef _PLOT_BASIC_
 #define _PLOT_BASIC_
 
+#include "fmt/core.h"
 #include <cmath>
 #include <string>
 #include <vector>
@@ -73,11 +74,15 @@ using img2d = std::vector<std::vector<pix>>;
 struct pix_pos {
     int clm;
     int row;
-    pix_pos add(pix_pos adder) {
+    pix_pos add(const pix_pos &adder) {
         return {clm + adder.clm, row + adder.row};
     }
     pix_pos add(int n, int m) {
         return {clm + n, row + m};
+    }
+    void operator+=(const pix_pos &adder) {
+        clm += adder.clm;
+        row += adder.row;
     }
 };
 struct vector_2d {

@@ -1,4 +1,3 @@
-#include "../include/bmp_io.h"
 #include "../include/plot_2d.h"
 
 canvas_2d::canvas_2d(int width, int height, range x_, range y_) {
@@ -163,7 +162,7 @@ canvas_2d &operator<<(canvas_2d &target, func_para curve) {
 }
 
 double get_tick(double length) {
-    length /= 7.5;
+    length /= 15.0;
     double tmp = log10(length);
     int pow = i_floor(tmp);
     tmp -= pow;
@@ -184,32 +183,28 @@ double get_tick(double length) {
 void canvas_2d::draw_number(pix_pos base, double number, char kind) {
     int sign = number > 0 ? 1 : -1;
     int number_int = i_floor(number * 10), digits = 0;
-    std::string filename = "./img/0_20pt.bmp";
-    if (kind != 'x' && kind != 'y') {
+    if (kind != 'x' && kind != 'y')
         return;
-    }
     if (number_int % 10 == 0) {
         if (sign < 0) {
             digits++;
             number_int = -number_int;
         }
-        number_int = number_int / 10;
+        number_int /= 10;
         std::string number_s = std::to_string(number_int);
         digits += number_s.length();
-        if (kind == 'x') {
-            base = base.add(-5 * digits, -20);
-        } else {
-            base = base.add(-10 * digits - 5, -7);
-        }
+        if (kind == 'x')
+            base += {-5 * digits, -20};
+        else
+            base += {-10 * digits - 5, -7};
         if (sign < 0) {
             canvas::attach(base, "./img/minus_20pt.bmp");
             digits--;
-            base = base.add(10, 0);
+            base.clm += 10;
         }
         for (int i = 0; i < digits; i++) {
-            filename[6] = number_s[i];
-            canvas::attach(base, filename);
-            base = base.add(10, 0);
+            canvas::attach(base, fmt::format("./img/{}_20pt.bmp", number_s[i]));
+            base.clm += 10;
         }
     } else {
         digits++;
@@ -217,43 +212,38 @@ void canvas_2d::draw_number(pix_pos base, double number, char kind) {
             digits++;
             number_int = -number_int;
         }
-        if (std::abs(number_int) < 10) {
+        if (std::abs(number_int) < 10)
             digits++;
-        }
         std::string number_s = std::to_string(number_int);
         digits += number_s.length();
-        if (kind == 'x') {
-            base = base.add(-5 * digits, -20);
-        } else {
-            base = base.add(-10 * digits - 5, -7);
-        }
+        if (kind == 'x')
+            base += {-5 * digits, -20};
+        else
+            base += {-10 * digits - 5, -7};
         if (sign < 0) {
             canvas::attach(base, "./img/minus_20pt.bmp");
             digits--;
-            base = base.add(10, 0);
+            base.clm += 10;
         }
         if (number_int < 10) {
             canvas::attach(base, "./img/0_20pt.bmp");
-            base = base.add(10, 0);
+            base.clm += 10;
             canvas::attach(base, "./img/dot_20pt.bmp");
-            base = base.add(10, 0);
-            filename[6] = number_s[0];
-            canvas::attach(base, filename);
-            base = base.add(10, 0);
+            base.clm += 10;
+            canvas::attach(base, fmt::format("./img/{}_20pt.bmp", number_s[0]));
+            base.clm += 10;
         } else {
             for (int i = 0; i < digits; i++) {
                 if (i == digits - 2) {
                     canvas::attach(base, "./img/dot_20pt.bmp");
-                    base = base.add(10, 0);
+                    base.clm += 10;
                 }
                 if (i < digits - 2) {
-                    filename[6] = number_s[i];
-                    canvas::attach(base, filename);
-                    base = base.add(10, 0);
+                    canvas::attach(base, fmt::format("./img/{}_20pt.bmp", number_s[i]));
+                    base.clm += 10;
                 }
                 if (i == digits - 1) {
-                    filename[6] = number_s[i - 1];
-                    canvas::attach(base, filename);
+                    canvas::attach(base, fmt::format("./img/{}_20pt.bmp", number_s[i - 1]));
                 }
             }
         }

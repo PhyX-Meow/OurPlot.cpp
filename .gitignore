@@ -1,6 +1,7 @@
 *test*
 *.exe
 *.out
-*.so
+libplot.so
+libplot.dll
 /*.bmp
 .vscode/*
