@@ -118,38 +118,8 @@ double get_tick(double length) {
     return ans;
 }
 
-int stringlen(std::string s) {
-    int i = 0;
-    while (s[i] != '\0') {
-        i++;
-    }
-    return i;
-}
-
-std::string to_string(int number) {
-    int i = 0, k;
-    std::string reverse, out;
-    if (number == 0) {
-        out = "0";
-        return out;
-    } else {
-        while (number > 0) {
-            out[i] = number % 10;
-            i++;
-            number = number / 10;
-        }
-        out[i] = '\0';
-        reverse[i] = '\0';
-        k = i - 1;
-        for (i = 0; i <= k; i++) {
-            reverse[i] = out[k - i];
-        }
-        return reverse;
-    }
-};
-
 void canvas_2d::draw_number(pix_pos base, double number, char kind, int sign) {
-    int digits[10], i = 0, number_int = number * 10 / 1, figure = 0;
+    int i = 0, number_int = number * 10 / 1, figure = 0;
     std::string filename = "./img/0_20pt.bmp";
     if (kind != 'x' && kind != 'y') {
         return;
@@ -160,8 +130,8 @@ void canvas_2d::draw_number(pix_pos base, double number, char kind, int sign) {
             number_int = -number_int;
         }
         number_int = number_int / 10;
-        std::string number_s = to_string(number_int);
-        figure += stringlen(number_s);
+        std::string number_s = std::to_string(number_int);
+        figure += number_s.length();
         if (kind == 'x') {
             base = base.add({-5 * figure, -20});
         } else {
@@ -183,8 +153,8 @@ void canvas_2d::draw_number(pix_pos base, double number, char kind, int sign) {
             figure++;
             number_int = -number_int;
         }
-        std::string number_s = to_string(number_int);
-        figure += stringlen(number_s);
+        std::string number_s = std::to_string(number_int);
+        figure += number_s.length();
         if (kind == 'x') {
             base = base.add(-5 * figure, -20);
         } else {

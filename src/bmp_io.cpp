@@ -46,7 +46,7 @@ int canvas::attach(pix_pos base, std::string filename) {
     file.read(reinterpret_cast<char *>(&height), 4);
     int offset = width % 4;
     for (int i = 0; i < height; i++) {
-        file.read(reinterpret_cast<char *>(data[i + base.row].data() + base.clm), 3 * width);
+        file.read(reinterpret_cast<char *>(data[i + base.row].data() + base.clm), std::min(3 * width, this->width() - base.clm));
         file.seekg(offset, std::ios::cur);
     }
     file.close();
