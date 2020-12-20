@@ -26,7 +26,13 @@ pix alphablend(pix p, pix color_new, double alpha) {
     return p;
 }
 void canvas::draw_line(float_pos ini, float_pos end, pix color, plot_style style) {
-    double r{1};
+    double r;
+    if (style == thin)
+        r = 0.5;
+    if (style == medium)
+        r = 1;
+    if (style == thick)
+        r = 1.5;
     pix_pos start = to_pix({std::min(ini.x, end.x) - r, std::min(ini.y, end.y) - r});
     pix_pos ending = to_pix({std::max(ini.x, end.x) + r, std::max(ini.y, end.y) + r});
     for (int x = start.clm; x <= ending.clm; ++x) {
