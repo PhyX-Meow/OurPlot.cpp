@@ -76,7 +76,7 @@ void canvas::draw_line(float_pos ini, float_pos end, pix color, plot_style style
 
     pix_pos centre;
     //second step: search responding pixel positions
-    if (abs_d(slope) <= 1.0) {
+    if (std::abs(slope) <= 1.0) {
         c = ini.y - slope * ini.x;
         if (ini.x > end.x)
             std::swap(ini, end), std::swap(start, ending);
@@ -136,7 +136,7 @@ canvas_2d &operator<<(canvas_2d &target, func_1var curve) {
         d = (curve.func(t + (1e-5)) - curve.func(t)) / (1e-5);
         precis = d > 1 ? curve.precis / d : curve.precis;
         precis = std::max(precis, target.step_x / 8);
-        if (abs_d(curve.func(t + precis) - curve.func(t)) / precis > (double) target.height() / 3) continue;
+        if (std::abs(curve.func(t + precis) - curve.func(t)) / precis > (double) target.height() / 3) continue;
         target << line({t, curve.func(t)}, {t + precis, curve.func(t + precis)}, color);
     }
     return target;

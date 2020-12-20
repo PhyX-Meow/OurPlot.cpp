@@ -7,10 +7,6 @@
 
 const double pi = M_PI;
 
-// abs : double -> double
-inline double abs_d(double x) {
-    return x > 0 ? x : -x;
-}
 // i_floor : double -> int
 inline int i_floor(double x) {
     x += 1e-5;
