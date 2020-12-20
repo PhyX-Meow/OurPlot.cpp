@@ -212,9 +212,9 @@ void canvas_2d::draw_axes() {
     float_pos left{0.5 - origin.clm, 0}, right{width() - 0.5 - origin.clm, 0}, up{0, height() - 0.5 - origin.row}, down{0, 0.5 - origin.row};
 
     if (origin.clm >= 0 && origin.clm <= width())
-        draw_line(left, right, Black, thin);
+        draw_line(left, right, Black, medium);
     if (origin.row >= 0 && origin.row <= height())
-        draw_line(down, up, Black, thin);
+        draw_line(down, up, Black, medium);
 
     double tick_height{5.0}, tick_ratio{7.5};
     double tick_x{get_tick(x.length(), tick_ratio) / step_x}, tick_y{get_tick(y.length(), tick_ratio) / step_y};
@@ -222,22 +222,22 @@ void canvas_2d::draw_axes() {
 
     draw_number(origin, 0, 0, O);
     if (origin.clm <= width())
-        for (double i = tick_x; i < right.x; i += tick_x) {
+        for (double i = tick_x; i < right.x - 10; i += tick_x) {
             draw_line({i, 0}, {i, tick_height}, Black);
             draw_number(to_pix({i, 0}), i * step_x, digit_x, X);
         }
     if (origin.clm > 0)
-        for (double i = -tick_x; i > left.x; i -= tick_x) {
+        for (double i = -tick_x; i > left.x + 10; i -= tick_x) {
             draw_line({i, 0}, {i, tick_height}, Black);
             draw_number(to_pix({i, 0}), i * step_x, digit_x, X);
         }
     if (origin.row <= width())
-        for (double i = tick_y; i < up.y; i += tick_y) {
+        for (double i = tick_y; i < up.y - 10; i += tick_y) {
             draw_line({0, i}, {tick_height, i}, Black);
             draw_number(to_pix({0, i}), i * step_y, digit_y, Y);
         }
     if (origin.row > 0)
-        for (double i = -tick_y; i > down.y; i -= tick_y) {
+        for (double i = -tick_y; i > down.y + 10; i -= tick_y) {
             draw_line({0, i}, {tick_height, i}, Black);
             draw_number(to_pix({0, i}), i * step_y, digit_y, Y);
         }

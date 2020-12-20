@@ -58,8 +58,10 @@ int canvas::attach(std::string filename) {
     file.read(reinterpret_cast<char *>(&height), 4);
     file.seekg(0x36, std::ios::beg);
     int offset = width % 4;
-    for (int i = 0; i < height; i++) {
-        file.read(reinterpret_cast<char *>(data[i + pen.row].data() + pen.clm), 3 * std::min(width, this->width() - pen.clm));
+    int ceiling{std::min(height, this->height() - pen.row)};
+    int wall{3 * std::min(width, this->width() - pen.clm)};
+    for (int i = 0; i < ceiling; i++) {
+        file.read(reinterpret_cast<char *>(data[i + pen.row].data() + pen.clm), wall);
         file.seekg(offset, std::ios::cur);
     }
     file.close();
