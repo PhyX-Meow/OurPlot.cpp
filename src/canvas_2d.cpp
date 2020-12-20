@@ -17,13 +17,13 @@ double capsuleSDF(float_pos pt, float_pos ini, float_pos end, double r) {
     double c{sqrt(dist * dist) - r};
     return std::max(std::min(0.5 - c, 1.0), 0.0);
 }
-/*
-pix alphablend(pix p, pix color_new, double alpha) {
-    p.r = (unsigned char) (p.r * (1 - alpha) + color_new.r * alpha * 255);
-    p.g = (unsigned char) (p.g * (1 - alpha) + color_new.g * alpha * 255);
-    p.b = (unsigned char) (p.b * (1 - alpha) + color_new.b * alpha * 255);
-    return p;
-}*/
+// pix alphablend(pix p, pix color_new, double alpha) {
+//     p.r = (unsigned char) (p.r * (1 - alpha) + color_new.r * alpha * 255);
+//     p.g = (unsigned char) (p.g * (1 - alpha) + color_new.g * alpha * 255);
+//     p.b = (unsigned char) (p.b * (1 - alpha) + color_new.b * alpha * 255);
+//     return p;
+// }
+
 void canvas::draw_line(float_pos ini, float_pos end, pix color, plot_style style) {
     double r;
     if (style == thin)
@@ -44,58 +44,56 @@ void canvas::draw_line(float_pos ini, float_pos end, pix color, plot_style style
     }
 }
 
-/*
+// void canvas::draw_line(float_pos ini, float_pos end, pix color, plot_style style) {
+//     //first step: affine trans.
+//     double r{1};
+//     pix_pos start = to_pix(ini), ending = to_pix(end);
+//     double slope, c;
+//     slope = (end.y - ini.y) / (end.x - ini.x);
 
-void canvas::draw_line(float_pos ini, float_pos end, pix color, plot_style style) {
-    //first step: affine trans.
-    double r{1};
-    pix_pos start = to_pix(ini), ending = to_pix(end);
-    double slope, c;
-    slope = (end.y - ini.y) / (end.x - ini.x);
+//     pix_pos centre;
+//     //second step: search responding pixel positions
+//     if (std::abs(slope) <= 1.0) {
+//         c = ini.y - slope * ini.x;
+//         if (ini.x > end.x)
+//             std::swap(ini, end), std::swap(start, ending);
+//         for (int i = start.clm; i <= ending.clm; ++i) {
+//             double t = to_affine(pix_pos{i, origin.row}).x;
+//             double h = slope * t + c;
+//             centre = to_pix({t, h});
 
-    pix_pos centre;
-    //second step: search responding pixel positions
-    if (std::abs(slope) <= 1.0) {
-        c = ini.y - slope * ini.x;
-        if (ini.x > end.x)
-            std::swap(ini, end), std::swap(start, ending);
-        for (int i = start.clm; i <= ending.clm; ++i) {
-            double t = to_affine(pix_pos{i, origin.row}).x;
-            double h = slope * t + c;
-            centre = to_pix({t, h});
+//             //last step: for every pixel position, paint 9*9 square
+//             for (int i = -5; i <= 5; i++)
+//                 for (int j = -5; j <= 5; j++) {
+//                     float_pos aff = to_affine(centre.add(i, j));
+//                     //dist2 = (aff.x * slope + c - aff.y) * (aff.x * slope + c - aff.y) / (slope * slope + 1);
+//                     if (contains(centre.add(i, j))) {
+//                         (*this)[centre.add(i, j)] = (*this)[centre.add(i, j)].min(color * (capsuleSDF(aff, ini, end, r)));
+//                     }
+//                 }
+//         }
+//     } else {
+//         slope = (end.x - ini.x) / (end.y - ini.y);
+//         c = ini.x - ini.y * slope;
+//         if (ini.y > end.y)
+//             std::swap(ini, end), std::swap(start, ending);
+//         for (int i = start.row; i <= ending.row; ++i) {
+//             double t = to_affine(pix_pos{origin.clm, i}).y;
+//             double h = slope * t + c;
+//             centre = to_pix({h, t});
 
-            //last step: for every pixel position, paint 9*9 square
-            for (int i = -5; i <= 5; i++)
-                for (int j = -5; j <= 5; j++) {
-                    float_pos aff = to_affine(centre.add(i, j));
-                    //dist2 = (aff.x * slope + c - aff.y) * (aff.x * slope + c - aff.y) / (slope * slope + 1);
-                    if (contains(centre.add(i, j))) {
-                        (*this)[centre.add(i, j)] = (*this)[centre.add(i, j)].min(color * (capsuleSDF(aff, ini, end, r)));
-                    }
-                }
-        }
-    } else {
-        slope = (end.x - ini.x) / (end.y - ini.y);
-        c = ini.x - ini.y * slope;
-        if (ini.y > end.y)
-            std::swap(ini, end), std::swap(start, ending);
-        for (int i = start.row; i <= ending.row; ++i) {
-            double t = to_affine(pix_pos{origin.clm, i}).y;
-            double h = slope * t + c;
-            centre = to_pix({h, t});
+//             for (int i = -5; i <= 5; i++)
+//                 for (int j = -5; j <= 5; j++) {
+//                     float_pos aff = to_affine(centre.add(i, j));
+//                     //dist2 = (aff.y * slope + c - aff.x) * (aff.y * slope + c - aff.x) / (slope * slope + 1);
+//                     if (contains(centre.add(i, j))) {
+//                         (*this)[centre.add(i, j)] = (*this)[centre.add(i, j)].min(color * (capsuleSDF(aff, ini, end, r)));
+//                     }
+//                 }
+//         }
+//     }
+// }
 
-            for (int i = -5; i <= 5; i++)
-                for (int j = -5; j <= 5; j++) {
-                    float_pos aff = to_affine(centre.add(i, j));
-                    //dist2 = (aff.y * slope + c - aff.x) * (aff.y * slope + c - aff.x) / (slope * slope + 1);
-                    if (contains(centre.add(i, j))) {
-                        (*this)[centre.add(i, j)] = (*this)[centre.add(i, j)].min(color * (capsuleSDF(aff, ini, end, r)));
-                    }
-                }
-        }
-    }
-}
-*/
 canvas_2d &operator<<(canvas_2d &target, line L) {
     float_pos ini{target.to_affine(L.ini)}, end{target.to_affine(L.end)};
     target.draw_line(ini, end, L.color);
@@ -218,7 +216,7 @@ void canvas_2d::draw_axes() {
     if (origin.row >= 0 && origin.row <= height())
         draw_line(down, up, Black, thin);
 
-    double tick_height{4.0}, tick_ratio{15.0};
+    double tick_height{5.0}, tick_ratio{15.0};
     double tick_x{get_tick(x.length(), tick_ratio) / step_x}, tick_y{get_tick(y.length(), tick_ratio) / step_y};
     double digit_x{get_digits(x.length(), tick_ratio)}, digit_y{get_digits(y.length(), tick_ratio)};
 
