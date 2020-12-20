@@ -163,7 +163,7 @@ canvas_2d &operator<<(canvas_2d &target, func_para curve) {
 }
 
 double get_tick(double length) {
-    length /= 15.0;
+    length /= 7.5;
     double tmp = log10(length);
     int pow = i_floor(tmp);
     tmp -= pow;
@@ -182,7 +182,7 @@ double get_tick(double length) {
 }
 
 void canvas_2d::draw_number(pix_pos base, double number, char kind, int sign) {
-    int i = 0, number_int = number * 10 / 1, digits = 0;
+    int i = 0, number_int = i_floor(number * 10 + 1e-5), digits = 0;
     std::string filename = "./img/0_20pt.bmp";
     if (kind != 'x' && kind != 'y') {
         return;
@@ -203,8 +203,8 @@ void canvas_2d::draw_number(pix_pos base, double number, char kind, int sign) {
         if (sign < 0) {
             canvas::attach(base, "./img/minus_20pt.bmp");
             digits--;
+            base = base.add(10, 0);
         }
-        base = base.add(10, 0);
         for (i = 0; i < digits; i++) {
             filename[6] = number_s[i];
             canvas::attach(base, filename);
@@ -216,6 +216,9 @@ void canvas_2d::draw_number(pix_pos base, double number, char kind, int sign) {
             digits++;
             number_int = -number_int;
         }
+        if (std::abs(number_int) < 10) {
+            digits++;
+        }
         std::string number_s = std::to_string(number_int);
         digits += number_s.length();
         if (kind == 'x') {
@@ -226,15 +229,31 @@ void canvas_2d::draw_number(pix_pos base, double number, char kind, int sign) {
         if (sign < 0) {
             canvas::attach(base, "./img/minus_20pt.bmp");
             digits--;
+            base = base.add(10, 0);
         }
-        for (i = 0; i < digits; i++) {
-            if (i == digits - 2) {
-                canvas::attach(base, "./img/dot_20pt.bmp");
-                base = base.add(10, 0);
-            } else {
-                filename[6] = number_s[i];
-                canvas::attach(base, filename);
-                base = base.add(10, 0);
+        if (number_int < 10) {
+            canvas::attach(base, "./img/0_20pt.bmp");
+            base = base.add(10, 0);
+            canvas::attach(base, "./img/dot_20pt.bmp");
+            base = base.add(10, 0);
+            filename[6] = number_s[0];
+            canvas::attach(base, filename);
+            base = base.add(10, 0);
+        } else {
+            for (i = 0; i < digits; i++) {
+                if (i == digits - 2) {
+                    canvas::attach(base, "./img/dot_20pt.bmp");
+                    base = base.add(10, 0);
+                }
+                if (i < digits - 2) {
+                    filename[6] = number_s[i];
+                    canvas::attach(base, filename);
+                    base = base.add(10, 0);
+                }
+                if (i == digits - 1) {
+                    filename[6] = number_s[i - 1];
+                    canvas::attach(base, filename);
+                }
             }
         }
     }
@@ -254,22 +273,22 @@ void canvas_2d::draw_axes() {
     if (origin.clm <= width())
         for (double i = tick_x; i < right.x; i += tick_x) {
             draw_line({i, 0}, {i, tick_height}, Black);
-            draw_number(to_pix({i, 0}), i / tick_x, 'x', 1);
+            draw_number(to_pix({i, 0}), i * step_x, 'x', 1);
         }
     if (origin.clm > 0)
         for (double i = -tick_x; i > left.x; i -= tick_x) {
             draw_line({i, 0}, {i, tick_height}, Black);
-            draw_number(to_pix({i, 0}), i / tick_x, 'x', -1);
+            draw_number(to_pix({i, 0}), i * step_x, 'x', -1);
         }
     if (origin.row <= width())
         for (double i = tick_y; i < up.y; i += tick_y) {
             draw_line({0, i}, {tick_height, i}, Black);
-            draw_number(to_pix({0, i}), i / tick_y, 'y', 1);
+            draw_number(to_pix({0, i}), i * step_y, 'y', 1);
         }
     if (origin.row > 0)
         for (double i = -tick_y; i > down.y; i -= tick_y) {
             draw_line({0, i}, {tick_height, i}, Black);
-            draw_number(to_pix({0, i}), i / tick_y, 'y', -1);
+            draw_number(to_pix({0, i}), i * step_y, 'y', -1);
         }
 
     draw_line({right.x - 8, 8}, right, Black);
