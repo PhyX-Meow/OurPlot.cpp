@@ -4,7 +4,7 @@
 #include "plot_3d.h"
 
 const double x_proj[]{24.8438, -16.175, 0.0};
-const double y_proj[]{-5.375, -5.3, -145.0};
+const double y_proj[]{-5.375, -5.3, 145.0};
 
 class toy_3d : public canvas {
   public:
@@ -16,5 +16,7 @@ class toy_3d : public canvas {
     float_pos projection(point_3d p);
 };
 toy_3d &operator<<(toy_3d &target, line_3d L);
+toy_3d &operator<<(toy_3d &target, surface F);
+toy_3d &operator<<(toy_3d &target, curve c);
 
 #endif

@@ -55,10 +55,14 @@ class surface {
         color = color_;
         precis = precis_;
     }
+    inline double operator()(double x, double y) {
+        return func(x, y);
+    }
 
     real_2var_func func;
     color_func color;
     double precis{0.1};
+    int mesh{5};
 };
 canvas_3d &operator<<(canvas_3d &target, surface Sigma);
 

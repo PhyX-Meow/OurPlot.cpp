@@ -11,3 +11,11 @@ toy_3d &operator<<(toy_3d &target, line_3d L) {
     target.draw_line(ini, end, L.color);
     return target;
 }
+toy_3d &operator<<(toy_3d &target, surface F) {
+    double precis = F.precis;
+    int mesh = F.mesh;
+    for (double s = -8.0; s < 8.0; s += precis * mesh)
+        for (double t = -8.0; t < 8.0; t += precis * mesh) {
+        }
+    return target;
+}
