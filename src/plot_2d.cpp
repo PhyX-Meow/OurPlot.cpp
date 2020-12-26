@@ -99,38 +99,38 @@ canvas_2d &operator<<(canvas_2d &target, line L) {
     target.draw_line(ini, end, L.color);
     return target;
 }
-canvas_2d &operator<<(canvas_2d &target, func_1var curve) {
-    pix color = curve.color;
-    double precis = curve.precis;
+canvas_2d &operator<<(canvas_2d &target, func_1var f) {
+    pix color = f.color;
+    double precis = f.precis;
     double d;
-    if (curve.var == X)
+    if (f.var == X)
         for (double t = target.x.min - target.step_x; t < target.x.max + target.step_x; t += precis) {
-            d = (curve.func(t + (1e-5)) - curve.func(t)) / (1e-5);
-            precis = d > 1 ? curve.precis / d : curve.precis;
+            d = (f(t + (1e-5)) - f(t)) / (1e-5);
+            precis = d > 1 ? f.precis / d : f.precis;
             precis = std::max(precis, target.step_x / 8);
-            if (std::abs(curve.func(t + precis) - curve.func(t)) / precis > (double) target.height() / 3) continue;
-            target << line({t, curve.func(t)}, {t + precis, curve.func(t + precis)}, color);
+            if (std::abs(f(t + precis) - f(t)) / precis > (double) target.height() / 3) continue;
+            target << line({t, f(t)}, {t + precis, f(t + precis)}, color);
         }
     else
         for (double t = target.y.min - target.step_y; t < target.x.max + target.step_y; t += precis) {
-            d = (curve.func(t + (1e-5)) - curve.func(t)) / (1e-5);
-            precis = d > 1 ? curve.precis / d : curve.precis;
+            d = (f(t + (1e-5)) - f(t)) / (1e-5);
+            precis = d > 1 ? f.precis / d : f.precis;
             precis = std::max(precis, target.step_y / 8);
-            if (std::abs(curve.func(t + precis) - curve.func(t)) / precis > (double) target.height() / 3) continue;
-            target << line({curve.func(t), t}, {curve.func(t + precis), t + precis}, color);
+            if (std::abs(f(t + precis) - f(t)) / precis > (double) target.height() / 3) continue;
+            target << line({f(t), t}, {f(t + precis), t + precis}, color);
         }
     return target;
 }
-canvas_2d &operator<<(canvas_2d &target, func_polar curve) {
-    pix color = curve.color;
-    double precis = curve.precis;
-    double init_t = curve.angle.min, end_t = curve.angle.max;
-    double r, r_next = curve.func(init_t);
+canvas_2d &operator<<(canvas_2d &target, func_polar r) {
+    pix color = r.color;
+    double precis = r.precis;
+    double init_t = r.angle.min, end_t = r.angle.max;
+    double r0, r1 = r(init_t);
     for (double theta = init_t; theta < end_t + precis; theta += precis) {
-        r = r_next;
-        r_next = curve.func(theta + precis);
-        precis = r > 1 ? curve.precis / r : curve.precis;
-        target << line(polar(r, theta), polar(r_next, theta + precis), color);
+        r0 = r1;
+        r1 = r(theta + precis);
+        precis = r0 > 1 ? r.precis / r0 : r.precis;
+        target << line(polar(r0, theta), polar(r1, theta + precis), color);
     }
     return target;
 }
@@ -138,7 +138,7 @@ canvas_2d &operator<<(canvas_2d &target, func_para curve) {
     pix color = curve.color;
     double precis = curve.precis;
     for (double t = curve.time.min; t < curve.time.max + precis; t += precis)
-        target << line({curve.func_x(t), curve.func_y(t)}, {curve.func_x(t + precis), curve.func_y(t + precis)}, color);
+        target << line(curve(t), curve(t + precis), color);
     return target;
 }
 

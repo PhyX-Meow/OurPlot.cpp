@@ -2,6 +2,7 @@
 #define _PLOT_3D_
 
 #include "plot_basic.h"
+#include <functional>
 
 struct point_3d {
     double x;
@@ -22,6 +23,7 @@ struct vector_3d {
         return ;
     }*/
 };
+
 class line_3d {
   public:
     line_3d(point_3d ini_, point_3d end_, pix color_ = Black) {
@@ -39,19 +41,35 @@ class canvas_3d : public canvas {
   public:
     canvas_3d(int width, int height, range x, range y, range z, point_3d viewpoint);
     float_pos projection(point_3d p);
+    void draw_axes();
+    void draw_number();
 };
 canvas_3d &operator<<(canvas_3d &target, line_3d L);
 
+using real_2var_func = std::function<double(double, double)>;
+using color_func = std::function<pix(point_3d)>;
+
 class surface {
+    surface(real_2var_func func_, color_func color_, double precis_ = 0.1) {
+        func = func_;
+        color = color_;
+        precis = precis_;
+    }
+
+    real_2var_func func;
+    color_func color;
+    double precis{0.1};
 };
+canvas_3d &operator<<(canvas_3d &target, surface Sigma);
 
 class curve {
+    real_func func_x, func_y, func_z;
+    pix color;
+    double precis{0.1};
 };
+canvas_3d &operator<<(canvas_3d &target, curve Gamma);
 
 class surface_para {
-};
-
-class axes_3d {
 };
 
 #endif

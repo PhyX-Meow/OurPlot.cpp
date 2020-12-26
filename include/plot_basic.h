@@ -87,13 +87,13 @@ using img2d = std::vector<std::vector<pix>>;
 struct pix_pos {
     int clm;
     int row;
-    pix_pos add(const pix_pos &adder) {
+    inline pix_pos add(const pix_pos &adder) {
         return {clm + adder.clm, row + adder.row};
     }
-    pix_pos add(int n, int m) {
+    inline pix_pos add(int n, int m) {
         return {clm + n, row + m};
     }
-    pix_pos minus(int n, int m) {
+    inline pix_pos minus(int n, int m) {
         return {clm - n, row - m};
     }
 };
@@ -130,20 +130,20 @@ enum plot_style {
 class canvas {
   public:
     img2d data;
-    pix &operator[](const pix_pos &pos) {
+    inline pix &operator[](const pix_pos &pos) {
         return data[pos.row][pos.clm];
     }
 
-    int height() { return data.size(); }
-    int width() { return data[0].size(); }
+    inline int height() { return data.size(); }
+    inline int width() { return data[0].size(); }
 
-    bool contains(pix_pos pos) {
+    inline bool contains(pix_pos pos) {
         return (pos.clm < width()) && (pos.clm >= 0) && (pos.row < height()) && (pos.row >= 0);
     }
-    pix_pos to_pix(float_pos p) {
+    inline pix_pos to_pix(float_pos p) {
         return {i_floor(p.x) + origin.clm, i_floor(p.y) + origin.row};
     }
-    float_pos to_affine(pix_pos pos) {
+    inline float_pos to_affine(pix_pos pos) {
         return {pos.clm - origin.clm + 0.5, pos.row - origin.row + 0.5};
     }
 

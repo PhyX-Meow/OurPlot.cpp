@@ -11,7 +11,7 @@ struct point {
         x = x_;
         y = y_;
     }
-    point operator+(point adder) {
+    inline point operator+(point adder) {
         return {x + adder.x, y + adder.y};
     }
 };
@@ -34,7 +34,7 @@ class canvas_2d : public canvas {
   public:
     canvas_2d(int width, int height, range x_, range y_);
 
-    float_pos to_affine(point p) {
+    inline float_pos to_affine(point p) {
         return {p.x / step_x, p.y / step_y};
     }
 
@@ -68,10 +68,13 @@ class func_1var {
         precis = precis_;
         var = var_;
     }
+    inline double operator()(double x) {
+        return func(x);
+    }
 
-    pix color;
     real_func func;
-    double precis;
+    pix color;
+    double precis{0.1};
     axe_type var;
 };
 canvas_2d &operator<<(canvas_2d &target, func_1var shape);
@@ -84,9 +87,13 @@ class func_polar {
         angle = angle_;
         precis = precis_;
     }
-    pix color;
-    range angle;
+    inline double operator()(double th) {
+        return func(th);
+    }
+
     real_func func;
+    range angle;
+    pix color;
     double precis{0.1};
 };
 canvas_2d &operator<<(canvas_2d &target, func_polar shape);
@@ -100,15 +107,15 @@ class func_para {
         color = color_;
         precis = precis_;
     }
+    inline point operator()(double t) {
+        return euclid(func_x(t), func_y(t));
+    }
 
-    pix color;
-    range time;
     real_func func_x, func_y;
+    range time;
+    pix color;
     double precis{0.1};
 };
 canvas_2d &operator<<(canvas_2d &target, func_para shape);
-
-class axes {
-};
 
 #endif
