@@ -18,9 +18,6 @@ struct vector_3d {
     double operator*(vector_3d &v) {
         return (*this).x * v.x + (*this).y * v.y + (*this).z * v.z;
     }
-    /*vector_3d out_prod(vector_3d &v) {
-        return ;
-    }*/
 };
 
 class line_3d {
@@ -39,7 +36,7 @@ class line_3d {
 class canvas_3d : public canvas {
   public:
     canvas_3d(int width, int height, range x, range y, range z, point_3d viewpoint);
-    float_pos projection(point_3d p);
+    float_pos proj(point_3d p);
     void draw_axes();
     void draw_number();
 };
@@ -54,6 +51,7 @@ class surface {
         func = func_;
         color = color_;
         precis = precis_;
+        mesh = i_floor(0.5 / precis_);
     }
     inline double operator()(double x, double y) {
         return func(x, y);

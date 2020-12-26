@@ -72,6 +72,9 @@ struct pix {
     }
 };
 
+pix HSV(double hue, double s, double v);
+pix RGB_f(double red, double green, double blue);
+
 const pix White(0xFFFFFF);
 const pix Red(0xFF0000);
 const pix Green(0x00FF00);
@@ -97,6 +100,12 @@ struct pix_pos {
         return {clm - n, row - m};
     }
 };
+
+struct float_pos {
+    double x;
+    double y;
+};
+
 struct vector_2d {
     double x;
     double y;
@@ -116,10 +125,12 @@ struct vector_2d {
         return a * c;
     }
 };
-struct float_pos {
-    double x;
-    double y;
-};
+inline vector_2d operator-(float_pos end, float_pos ini) {
+    return {end.x - ini.x, end.y - ini.y};
+}
+inline double cross(vector_2d u, vector_2d v) {
+    return u.x * v.y - u.y * v.x;
+}
 
 enum plot_style {
     thin,
@@ -148,6 +159,7 @@ class canvas {
     }
 
     void draw_line(float_pos ini, float_pos end, pix color, plot_style style = thin);
+    void paint_trig(float_pos A, float_pos B, float_pos C, pix color);
     int save_as(std::string filename);
     int save_as(const char *filename);
     int attach(std::string filename);

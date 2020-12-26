@@ -1,13 +1,29 @@
 #include "../include/plot_2d.h"
 
-canvas_2d::canvas_2d(int width, int height, range x_, range y_) {
-    data = img2d(height, pixrow(width, White));
-    x = x_;
-    y = y_;
-    step_x = x_.length() / width;
-    step_y = y_.length() / height;
-    origin.clm = i_floor(-x_.min / x_.length() * width);
-    origin.row = i_floor(-y_.min / y_.length() * height);
+pix RGB_f(double red, double green, double blue) {
+    col r = static_cast<col>(red * 255);
+    col g = static_cast<col>(green * 255);
+    col b = static_cast<col>(blue * 255);
+    return {r, g, b};
+}
+pix HSV(double hue, double s, double v) {
+    int h = std::floor(hue / 60.0);
+    double f = hue / 60.0 - h;
+    double p = v * (1 - s);
+    double q = v * (1 - f * s);
+    double t = v * (1 - (1 - f) * s);
+    if (h == 1)
+        return RGB_f(q, v, p);
+    else if (h == 2)
+        return RGB_f(p, v, t);
+    else if (h == 3)
+        return RGB_f(p, q, v);
+    else if (h == 4)
+        return RGB_f(t, p, v);
+    else if (h == 5)
+        return RGB_f(v, p, q);
+    else
+        return RGB_f(v, t, p);
 }
 
 double capsuleSDF(float_pos pt, float_pos ini, float_pos end, double r) {
@@ -38,7 +54,7 @@ void canvas::draw_line(float_pos ini, float_pos end, pix color, plot_style style
         for (int y = start.row; y <= ending.row; ++y) {
             float_pos aff = to_affine({x, y});
             if (contains({x, y})) {
-                (*this)[{x, y}] = (*this)[{x, y}].min(color * (capsuleSDF(aff, ini, end, r)));
+                (*this)[{x, y}] = (*this)[{x, y}].min(color * capsuleSDF(aff, ini, end, r));
             }
         }
     }
@@ -93,6 +109,49 @@ void canvas::draw_line(float_pos ini, float_pos end, pix color, plot_style style
 //         }
 //     }
 // }
+
+bool in_trig(float_pos P, float_pos A, float_pos B, float_pos C) {
+    vector_2d a{A - P};
+    vector_2d b{B - P};
+    vector_2d c{C - P};
+    double ab{cross(a, b)}, bc{cross(b, c)}, ca{cross(c, a)};
+    if ((ab < 0 && bc > 0) || (ab > 0 && bc < 0))
+        return false;
+    if ((ca < 0 && bc > 0) || (ca > 0 && bc < 0))
+        return false;
+    return true;
+}
+
+void canvas::paint_trig(float_pos A, float_pos B, float_pos C, pix color) {
+    if (A.y > B.y)
+        std::swap(A, B);
+    if (B.y > C.y)
+        std::swap(B, C);
+    if (A.y > B.y)
+        std::swap(A, B);
+    int y_min = to_pix(A).row, y_max = to_pix(C).row;
+    if (A.x > B.x)
+        std::swap(A, B);
+    if (B.x > C.x)
+        std::swap(B, C);
+    if (A.x > B.x)
+        std::swap(A, B);
+    int x_min = to_pix(A).clm, x_max = to_pix(C).clm;
+    for (int i = x_min; i <= x_max; ++i)
+        for (int j = y_min; j <= y_max; ++j)
+            if (in_trig(to_affine({i, j}), A, B, C))
+                (*this)[{i, j}] = color;
+}
+
+canvas_2d::canvas_2d(int width, int height, range x_, range y_) {
+    data = img2d(height, pixrow(width, White));
+    x = x_;
+    y = y_;
+    step_x = x_.length() / width;
+    step_y = y_.length() / height;
+    origin.clm = i_floor(-x_.min / x_.length() * width);
+    origin.row = i_floor(-y_.min / y_.length() * height);
+}
 
 canvas_2d &operator<<(canvas_2d &target, line L) {
     float_pos ini{target.to_affine(L.ini)}, end{target.to_affine(L.end)};
