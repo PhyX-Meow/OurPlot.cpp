@@ -134,11 +134,11 @@ canvas_2d &operator<<(canvas_2d &target, func_polar r) {
     }
     return target;
 }
-canvas_2d &operator<<(canvas_2d &target, func_para curve) {
-    pix color = curve.color;
-    double precis = curve.precis;
-    for (double t = curve.time.min; t < curve.time.max + precis; t += precis)
-        target << line(curve(t), curve(t + precis), color);
+canvas_2d &operator<<(canvas_2d &target, func_para path) {
+    pix color = path.color;
+    double precis = path.precis;
+    for (double t = path.time.min; t < path.time.max + precis; t += precis)
+        target << line(path(t), path(t + precis), color);
     return target;
 }
 

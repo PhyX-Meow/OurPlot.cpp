@@ -2,7 +2,6 @@
 #define _PLOT_3D_
 
 #include "plot_basic.h"
-#include <functional>
 
 struct point_3d {
     double x;
@@ -50,6 +49,7 @@ using real_2var_func = std::function<double(double, double)>;
 using color_func = std::function<pix(point_3d)>;
 
 class surface {
+  public:
     surface(real_2var_func func_, color_func color_, double precis_ = 0.1) {
         func = func_;
         color = color_;
@@ -63,6 +63,7 @@ class surface {
 canvas_3d &operator<<(canvas_3d &target, surface Sigma);
 
 class curve {
+  public:
     real_func func_x, func_y, func_z;
     pix color;
     double precis{0.1};
