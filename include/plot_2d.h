@@ -62,21 +62,23 @@ canvas_2d &operator<<(canvas_2d &target, line L);
 
 class func_1var {
   public:
-    func_1var(double (*func_)(double), pix color_ = Blue, double precis_ = 0.1) {
+    func_1var(real_func func_, pix color_, double precis_ = 0.1, axe_type var_ = X) {
         func = func_;
         color = color_;
         precis = precis_;
+        var = var_;
     }
 
     pix color;
-    double (*func)(double);
+    real_func func;
     double precis;
+    axe_type var;
 };
 canvas_2d &operator<<(canvas_2d &target, func_1var shape);
 
 class func_polar {
   public:
-    func_polar(double (*func_)(double), range angle_, pix color_ = Blue, double precis_ = 0.1) {
+    func_polar(real_func func_, range angle_, pix color_, double precis_ = 0.1) {
         func = func_;
         color = color_;
         angle = angle_;
@@ -84,14 +86,14 @@ class func_polar {
     }
     pix color;
     range angle;
-    double (*func)(double);
+    real_func func;
     double precis{0.1};
 };
 canvas_2d &operator<<(canvas_2d &target, func_polar shape);
 
 class func_para {
   public:
-    func_para(double (*func_x_)(double), double (*func_y_)(double), range time_, pix color_ = Blue, double precis_ = 0.1) {
+    func_para(real_func func_x_, real_func func_y_, range time_, pix color_, double precis_ = 0.1) {
         func_x = func_x_;
         func_y = func_y_;
         time = time_;
@@ -101,8 +103,7 @@ class func_para {
 
     pix color;
     range time;
-    double (*func_x)(double);
-    double (*func_y)(double);
+    real_func func_x, func_y;
     double precis{0.1};
 };
 canvas_2d &operator<<(canvas_2d &target, func_para shape);

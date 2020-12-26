@@ -5,10 +5,13 @@
 #include "fmt/core.h"
 #include "fmt/format.h"
 #include <cmath>
+#include <functional>
 #include <string>
 #include <vector>
 
 const double pi = M_PI;
+
+using real_func = std::function<double(double)>;
 
 // i_floor : double -> int
 inline int i_floor(double x) {

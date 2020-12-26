@@ -23,6 +23,7 @@ struct vector_3d {
     }*/
 };
 class line_3d {
+  public:
     line_3d(point_3d ini_, point_3d end_, pix color_ = Black) {
         ini = ini_;
         end = end_;
@@ -35,7 +36,9 @@ class line_3d {
 };
 
 class canvas_3d : public canvas {
-    canvas_3d(range x, range y, range z, point_3d viewpoint);
+  public:
+    canvas_3d(int width, int height, range x, range y, range z, point_3d viewpoint);
+    float_pos projection(point_3d p);
 };
 canvas_3d &operator<<(canvas_3d &target, line_3d L);
 
