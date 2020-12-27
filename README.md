@@ -122,6 +122,8 @@ int main() {
 }
 ```
 
+![flower](./output/flower.bmp)
+
 ### 3d绘图
 
 因为 ddl 等原因，三维绘图功能尚不完善
@@ -177,3 +179,5 @@ int main() {
     return 0;
 }
 ```
+
+![hat](./output/hat.bmp)
