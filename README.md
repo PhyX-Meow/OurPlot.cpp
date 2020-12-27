@@ -10,7 +10,7 @@ cd ./OurPlot.cpp
 bash build.sh
 ```
 
-以上命令会在 `OurPlot.cpp/lib/` 目录下生成 `libplot.so`
+以上命令会在 `OurPlot.cpp/lib/` 目录下生成 `libplot.so`  
 注：至少需要 c++11 标准支持
 
 编译运行，假设 `main.cpp` 位于项目根目录下
