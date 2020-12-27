@@ -146,8 +146,6 @@ surface sigma(function, color_function, precis = 0.1, mesh = 5);
 `precis` 为取样精度，数值越小精度越高
 `mesh` 为整数，指定每多少个取样点画一条网格线
 
-* 例：绘制墨西哥草帽
-
 * 参数曲线
 
 Working In Progress
@@ -155,6 +153,8 @@ Working In Progress
 * 参数曲面
 
 Working In Progress
+
+* 例：绘制墨西哥草帽
 
 ```cpp
 #include "include/our_plot.h"
