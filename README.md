@@ -61,7 +61,7 @@ bash build.sh
 以上命令会在 `OurPlot.cpp/lib/` 目录下生成 `libplot.so`  
 注：至少需要 c++11 标准支持
 
-编译运行，假设 `main.cpp` 位于项目根目录下
+编译运行：假设 `main.cpp` 位于项目根目录下
 
 ```shell
 g++ -Wall -O2 main.cpp -L./lib -lplot -o main.out
@@ -90,7 +90,7 @@ canvas_2d c = canvas_2d(width, height, {x_min, x_max}, {y_min, y_max});
 canvas_2d c(width, height, {x_min, x_max}, {y_min, y_max});
 ```
 
-`width` 和 `height` 为正整数，分别指定画布的宽高，单位为像素
+`width` 和 `height` 为正整数，分别指定画布的宽高，单位为像素  
 `x_min, x_max, y_min, y_max` 为浮点数，指定画布中包含的坐标范围
 
 * 直线
@@ -137,9 +137,9 @@ const pix Black(0x000000);
 func_1var fun(function, color, style, precis = 0.1, axe_type = X);
 ```
 
-`function` 为 `double -> double` 的函数
-`precis` 为取样精度，数值越小精度越高，默认值为 `0.1`
-`axe_type` 取值为 `X` 或 `Y` 声明自变量是 x 或 y，默认值为 `X`
+`function` 为 `double -> double` 的函数  
+`precis` 为取样精度，数值越小精度越高，默认值为 `0.1`  
+`axe_type` 取值为 `X` 或 `Y` 声明自变量是 x 或 y，默认值为 `X`  
 `color` 与 `style` 含义同直线
 
 * 极坐标函数
@@ -158,8 +158,8 @@ func_polar pol(function, {θ_min, θ_max}, color, style, precis = 0.1);
 func_para par(function, {t_min, t_max}, color, style precis = 0.1);
 ```
 
-`function` 为 `double -> point` 的函数，返回值类型为 `point(double x, double y)` 代表平面中一个点
-`t_min, t_max` 为参数 t 绘制范围
+`function` 为 `double -> point` 的函数，返回值类型为 `point(double x, double y)` 代表平面中一个点  
+`t_min, t_max` 为参数 t 绘制范围  
 其余参数含义同一元函数
 
 * 将曲线绘制到坐标轴上
@@ -226,10 +226,10 @@ toy_3d c(width, height, scale);
 surface sigma(function, color_function, precis = 0.1, mesh = 5);
 ```
 
-`function` 是 z 关于 (x, y) 的函数，接受两个 `double` 参数，返回值为 `double` 类型
-`color_function` 指定如何对图像染色，接受 `point_3d` 为参数，返回值为 `pix` 类型
-其中 `point_3d` 类型的变量拥有三个成员 `x, y, z` 为它的三个坐标
-`precis` 为取样精度，数值越小精度越高
+`function` 是 z 关于 (x, y) 的函数，接受两个 `double` 参数，返回值为 `double` 类型  
+`color_function` 指定如何对图像染色，接受 `point_3d` 为参数，返回值为 `pix` 类型  
+其中 `point_3d` 类型的变量拥有三个成员 `x, y, z` 为它的三个坐标  
+`precis` 为取样精度，数值越小精度越高  
 `mesh` 为整数，指定每多少个取样点画一条网格线
 
 * 参数曲线
@@ -257,7 +257,9 @@ int main() {
     c << surface(
         hat,
         [](point_3d p) { return HSV((1.0 - p.z) * 240.0, 1.0, 1.0); },
-        0.1);
+        0.1,
+        5
+    );
     c.save_as("c.bmp");
 
     return 0;
