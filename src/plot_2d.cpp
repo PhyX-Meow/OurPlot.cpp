@@ -155,7 +155,7 @@ canvas_2d::canvas_2d(int width, int height, range x_, range y_) {
 
 canvas_2d &operator<<(canvas_2d &target, line L) {
     float_pos ini{target.to_affine(L.ini)}, end{target.to_affine(L.end)};
-    target.draw_line(ini, end, L.color);
+    target.draw_line(ini, end, L.color, L.style);
     return target;
 }
 canvas_2d &operator<<(canvas_2d &target, func_1var f) {
@@ -168,7 +168,7 @@ canvas_2d &operator<<(canvas_2d &target, func_1var f) {
             precis = d > 1 ? f.precis / d : f.precis;
             precis = std::max(precis, target.step_x / 8);
             if (std::abs(f(t + precis) - f(t)) / precis > (double) target.height() / 3) continue;
-            target << line({t, f(t)}, {t + precis, f(t + precis)}, color);
+            target << line({t, f(t)}, {t + precis, f(t + precis)}, color, f.style);
         }
     else
         for (double t = target.y.min - target.step_y; t < target.x.max + target.step_y; t += precis) {
@@ -176,7 +176,7 @@ canvas_2d &operator<<(canvas_2d &target, func_1var f) {
             precis = d > 1 ? f.precis / d : f.precis;
             precis = std::max(precis, target.step_y / 8);
             if (std::abs(f(t + precis) - f(t)) / precis > (double) target.height() / 3) continue;
-            target << line({f(t), t}, {f(t + precis), t + precis}, color);
+            target << line({f(t), t}, {f(t + precis), t + precis}, color, f.style);
         }
     return target;
 }
@@ -189,7 +189,7 @@ canvas_2d &operator<<(canvas_2d &target, func_polar r) {
         r0 = r1;
         r1 = r(theta + precis);
         precis = r0 > 1 ? r.precis / r0 : r.precis;
-        target << line(polar(r0, theta), polar(r1, theta + precis), color);
+        target << line(polar(r0, theta), polar(r1, theta + precis), color, r.style);
     }
     return target;
 }
@@ -197,7 +197,7 @@ canvas_2d &operator<<(canvas_2d &target, func_para path) {
     pix color = path.color;
     double precis = path.precis;
     for (double t = path.time.min; t < path.time.max + precis; t += precis)
-        target << line(path(t), path(t + precis), color);
+        target << line(path(t), path(t + precis), color, path.style);
     return target;
 }
 
