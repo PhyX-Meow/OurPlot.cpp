@@ -30,41 +30,41 @@ toy_3d &operator<<(toy_3d &target, surface F) {
                     MM = target.proj({x + precis, y + precis, F(x + precis, y + precis)});
                     target.paint_trig(mm, mM, Mm, White);
                     target.paint_trig(mM, Mm, MM, White);
-                    // if (i == 0) {
-                    //     now = {x, y, F(x, y)};
-                    //     next = {x, y + precis, F(x, y + precis)};
-                    //     target << line_3d(now, next, F.color(now));
-                    // }
-                    // if (j == 0) {
-                    //     now = {x, y, F(x, y)};
-                    //     next = {x + precis, y, F(x + precis, y)};
-                    //     target << line_3d(now, next, F.color(now));
-                    // }
+                    if (i == 0) {
+                        now = {x, y, F(x, y)};
+                        next = {x, y + precis, F(x, y + precis)};
+                        target << line_3d(now, next, F.color(now));
+                    }
+                    if (j == 0) {
+                        now = {x, y, F(x, y)};
+                        next = {x + precis, y, F(x + precis, y)};
+                        target << line_3d(now, next, F.color(now));
+                    }
                     y += precis;
                 }
                 x += precis;
             }
-            x = s;
-            y = t;
-            next = {x, y, F(x, y)};
-            for (int i = 0; i < mesh; ++i) {
-                now = next;
-                next = {x + precis, y, F(x + precis, y)};
-                target << line_3d(now, next, F.color(now));
-                x += precis;
-            }
-            x = s;
-            next = {x, y, F(x, y)};
-            for (int i = 0; i < mesh; ++i) {
-                now = next;
-                next = {x, y + precis, F(x, y + precis)};
-                target << line_3d(now, next, F.color(now));
-                y += precis;
-            }
+            // x = s;
+            // y = t;
+            // next = {x, y, F(x, y)};
+            // for (int i = 0; i < mesh; ++i) {
+            //     now = next;
+            //     next = {x + precis, y, F(x + precis, y)};
+            //     target << line_3d(now, next, F.color(now));
+            //     x += precis;
+            // }
+            // x = s;
+            // next = {x, y, F(x, y)};
+            // for (int i = 0; i < mesh; ++i) {
+            //     now = next;
+            //     next = {x, y + precis, F(x, y + precis)};
+            //     target << line_3d(now, next, F.color(now));
+            //     y += precis;
+            // }
         }
     }
 
-    x += step;
+    // x += step;
     next = {x, -8.0, F(x, -8.0)};
     for (double t = -8.0; t < 8.0; t += precis) {
         now = next;

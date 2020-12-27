@@ -2,7 +2,6 @@
 #define _PLOT_BASIC_
 
 #define FMT_HEADER_ONLY
-#include "fmt/core.h"
 #include "fmt/format.h"
 #include <cmath>
 #include <functional>
@@ -72,8 +71,8 @@ struct pix {
     }
 };
 
-pix HSV(double hue, double s, double v);
 pix RGB_f(double red, double green, double blue);
+pix HSV(double hue, double s, double v);
 
 const pix White(0xFFFFFF);
 const pix Red(0xFF0000);

@@ -47,11 +47,11 @@ using color_func = std::function<pix(point_3d)>;
 
 class surface {
   public:
-    surface(real_2var_func func_, color_func color_, double precis_ = 0.1) {
+    surface(real_2var_func func_, color_func color_, double precis_ = 0.1, int mesh_ = 5) {
         func = func_;
         color = color_;
         precis = precis_;
-        mesh = i_floor(0.5 / precis_);
+        mesh = mesh_;
     }
     inline double operator()(double x, double y) {
         return func(x, y);
@@ -64,9 +64,10 @@ class surface {
 };
 canvas_3d &operator<<(canvas_3d &target, surface Sigma);
 
+using para_3d = std::function<point_3d(double)>;
 class curve {
   public:
-    real_func func_x, func_y, func_z;
+    para_3d func;
     pix color;
     double precis{0.1};
 };

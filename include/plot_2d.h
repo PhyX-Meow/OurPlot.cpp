@@ -62,9 +62,10 @@ canvas_2d &operator<<(canvas_2d &target, line L);
 
 class func_1var {
   public:
-    func_1var(real_func func_, pix color_, double precis_ = 0.1, axe_type var_ = X) {
+    func_1var(real_func func_, pix color_, plot_style style_, double precis_ = 0.1, axe_type var_ = X) {
         func = func_;
         color = color_;
+        style = style_;
         precis = precis_;
         var = var_;
     }
@@ -74,6 +75,7 @@ class func_1var {
 
     real_func func;
     pix color;
+    plot_style style;
     double precis{0.1};
     axe_type var;
 };
@@ -81,10 +83,11 @@ canvas_2d &operator<<(canvas_2d &target, func_1var shape);
 
 class func_polar {
   public:
-    func_polar(real_func func_, range angle_, pix color_, double precis_ = 0.1) {
+    func_polar(real_func func_, range angle_, pix color_, plot_style style_, double precis_ = 0.1) {
         func = func_;
-        color = color_;
         angle = angle_;
+        color = color_;
+        style = style_;
         precis = precis_;
     }
     inline double operator()(double th) {
@@ -94,26 +97,29 @@ class func_polar {
     real_func func;
     range angle;
     pix color;
+    plot_style style;
     double precis{0.1};
 };
 canvas_2d &operator<<(canvas_2d &target, func_polar shape);
 
+using para_2d = std::function<point(double)>;
 class func_para {
   public:
-    func_para(real_func func_x_, real_func func_y_, range time_, pix color_, double precis_ = 0.1) {
-        func_x = func_x_;
-        func_y = func_y_;
+    func_para(para_2d func_, range time_, pix color_, plot_style style_, double precis_ = 0.1) {
+        func = func_;
         time = time_;
         color = color_;
+        style = style_;
         precis = precis_;
     }
     inline point operator()(double t) {
-        return euclid(func_x(t), func_y(t));
+        return func(t);
     }
 
-    real_func func_x, func_y;
+    para_2d func;
     range time;
     pix color;
+    plot_style style;
     double precis{0.1};
 };
 canvas_2d &operator<<(canvas_2d &target, func_para shape);
