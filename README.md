@@ -22,7 +22,7 @@ g++ -Wall -O2 main.cpp -L./lib -lplot -o main.out
 
 ### Windows
 
-Working In Irogress
+Working In Progress
 
 ## 使用说明
 
@@ -45,13 +45,20 @@ canvas_2d c(width, height, {x_min, x_max}, {y_min, y_max});
 `width` 和 `height` 为正整数，分别指定画布的宽高，单位为像素
 `x_min, x_max, y_min, y_max` 为浮点数，指定画布中包含的坐标范围
 
-* 一元函数
+* 直线
 
 ```cpp
-func_1var fun(function, color, style, precis = 0.1, axe_type = X);
+line L({ini_x, ini_y}, {end_x, end_y}, color, style);
 ```
 
-`function` 为 `double -> double` 的函数
+`ini_x, ini_y, end_x, end_y` 为起始点与终止点的横纵坐标  
+
+端点也可以用极坐标方式指定
+
+```cpp
+line L(polar(r1,θ1), polar(r2, θ2), color, style);
+```
+
 `color` 为 `pix` 类型的变量，支持如下构造方式
 
 ```cpp
@@ -61,9 +68,31 @@ RGB_f(red, green, blue); // red, green, blue real number in [0,1.0]
 HSV(hue,s,v); // hsv color, hue integer in [0,360], s and v real number in [0,1.0]
 ```
 
-`style` 有三种取值 `thin, medium, thick` 控制线条粗细
+头文件中包含如下预定义颜色变量
+
+```cpp
+const pix White(0xFFFFFF);
+const pix Red(0xFF0000);
+const pix Green(0x00FF00);
+const pix Blue(0x0000FF);
+const pix Cyan(0x00FFFFF);
+const pix Purple(0xFF00FF);
+const pix Yellow(0xFFFF00);
+const pix Black(0x000000);
+```
+
+`style` 控制线条粗细，取值为 `thin, medium, thick`
+
+* 一元函数
+
+```cpp
+func_1var fun(function, color, style, precis = 0.1, axe_type = X);
+```
+
+`function` 为 `double -> double` 的函数
 `precis` 为取样精度，数值越小精度越高，默认值为 `0.1`
 `axe_type` 取值为 `X` 或 `Y` 声明自变量是 x 或 y，默认值为 `X`
+`color` 与 `style` 含义同直线
 
 * 极坐标函数
 
@@ -73,7 +102,7 @@ func_polar pol(function, {θ_min, θ_max}, color, style, precis = 0.1);
 
 `function` 为 `double -> double` 的函数
 `θ_min, θ_max` 为 θ 的绘制范围
-其余参数同一元函数
+其余参数含义同一元函数
 
 * 参数曲线
 
@@ -83,7 +112,7 @@ func_para par(function, {t_min, t_max}, color, style precis = 0.1);
 
 `function` 为 `double -> point` 的函数，返回值类型为 `point(double x, double y)` 代表平面中一个点
 `t_min, t_max` 为参数 t 绘制范围
-其余参数同一元函数
+其余参数含义同一元函数
 
 * 将曲线绘制到坐标轴上
 
@@ -91,6 +120,13 @@ func_para par(function, {t_min, t_max}, color, style precis = 0.1);
 
 ```cpp
 c << fun << pol << par;
+```
+
+可以直接绘制匿名曲线对象
+
+```cpp
+c << line({-1.9, -1.9}, {.8, 1.0}, 0x114514)
+  << func_para([](double t) { return polar(1.0, t); }, {0, 2 * pi}, Black, thin);
 ```
 
 * 绘制坐标轴
@@ -114,8 +150,8 @@ c.save_as("path/to/file");
 
 int main() {
     canvas_2d c(1000, 1000, {-1.5, 1.5}, {-1.5, 1.5});
-    c << func_polar([](double t) { return sin(1.3 * t); }, {0, 20 * pi}, Red, thin, 0.01);
     c.draw_axes();
+    c << func_polar([](double t) { return sin(1.3 * t); }, {0, 20 * pi}, Red, thin, 0.01);
     c.save_as("flower.bmp");
 
     return 0;

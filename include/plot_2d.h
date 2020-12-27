@@ -49,14 +49,16 @@ class canvas_2d : public canvas {
 
 class line {
   public:
-    line(point ini_, point end_, pix color_ = Black) {
+    line(point ini_, point end_, pix color_ = Black, plot_style style_ = thin) {
         ini = ini_;
         end = end_;
         color = color_;
+        style = style_;
     }
     point ini;
     point end;
     pix color;
+    plot_style style;
 };
 canvas_2d &operator<<(canvas_2d &target, line L);
 
