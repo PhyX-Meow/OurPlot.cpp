@@ -1,5 +1,21 @@
 #include "../include/plot_2d.h"
 
+pix operator*(pix color, double k) {
+    color = ~color;
+    color.r = static_cast<char>(color.r * k);
+    color.g = static_cast<char>(color.g * k);
+    color.b = static_cast<char>(color.b * k);
+    return ~color;
+}
+pix operator+(pix P, pix Q) {
+    P = ~P;
+    Q = ~Q;
+    P.r = (P.r + Q.r);
+    P.g = (P.g + Q.g);
+    P.b = (P.b + Q.b);
+    return ~P;
+}
+
 pix RGB_f(double red, double green, double blue) {
     col r = static_cast<col>(red * 255);
     col g = static_cast<col>(green * 255);
@@ -167,7 +183,7 @@ canvas_2d &operator<<(canvas_2d &target, func_1var f) {
             d = (f(t + (1e-5)) - f(t)) / (1e-5);
             precis = d > 1 ? f.precis / d : f.precis;
             precis = std::max(precis, target.step_x / 8);
-            if (std::abs(f(t + precis) - f(t)) / precis > (double) target.height() / 3) continue;
+            if (std::abs(f(t + precis) - f(t)) / precis > (double) target.height() / 2) continue;
             target << line({t, f(t)}, {t + precis, f(t + precis)}, color, f.style);
         }
     else
@@ -175,7 +191,7 @@ canvas_2d &operator<<(canvas_2d &target, func_1var f) {
             d = (f(t + (1e-5)) - f(t)) / (1e-5);
             precis = d > 1 ? f.precis / d : f.precis;
             precis = std::max(precis, target.step_y / 8);
-            if (std::abs(f(t + precis) - f(t)) / precis > (double) target.height() / 3) continue;
+            if (std::abs(f(t + precis) - f(t)) / precis > (double) target.height() / 2) continue;
             target << line({f(t), t}, {f(t + precis), t + precis}, color, f.style);
         }
     return target;
@@ -287,6 +303,7 @@ void canvas_2d::draw_axes(double tick_ratio) {
     if (origin.row >= 0 && origin.row <= height())
         draw_line(down, up, Black, medium);
 
+    tick_ratio *= height() / 1000.0;
     double tick_height{5.0};
     double tick_x{get_tick(x.length(), tick_ratio) / step_x}, tick_y{get_tick(y.length(), tick_ratio) / step_y};
     double digit_x{get_digits(x.length(), tick_ratio)}, digit_y{get_digits(y.length(), tick_ratio)};

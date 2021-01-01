@@ -40,7 +40,7 @@ class canvas_2d : public canvas {
 
     double step_x;
     double step_y;
-    void draw_axes(double tick_ratio = 7.5);
+    void draw_axes(double tick_ratio = 10.0);
     void draw_number(pix_pos base, double number, int f_digits, axe_type type);
 
     range x;

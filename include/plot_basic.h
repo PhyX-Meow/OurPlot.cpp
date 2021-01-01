@@ -54,22 +54,9 @@ struct pix {
         tmp.b = tmp.b < color.b ? tmp.b : color.b;
         return tmp;
     }
-    pix operator*(double k) {
-        pix tmp = ~(*this);
-        tmp.r = static_cast<char>(tmp.r * k);
-        tmp.g = static_cast<char>(tmp.g * k);
-        tmp.b = static_cast<char>(tmp.b * k);
-        return ~tmp;
-    }
-    pix operator+(pix x) {
-        pix tmp = ~(*this);
-        x = ~x;
-        tmp.r = (tmp.r + x.r);
-        tmp.g = (tmp.g + x.g);
-        tmp.b = (tmp.b + x.b);
-        return ~tmp;
-    }
 };
+pix operator*(pix color, double k);
+pix operator+(pix P, pix Q);
 
 pix RGB_f(double red, double green, double blue);
 pix HSV(double hue, double s, double v);

@@ -1,13 +1,15 @@
 #include "./include/our_plot.h"
+#include "include/plot_2d.h"
+#include "include/plot_basic.h"
 
 int main() {
     canvas_2d task_1(1000, 1000, {-8, 8}, {-8, 8});
-    task_1.draw_axes(15.0);
+    task_1.draw_axes();
     task_1 << line({-10, -10}, {10, 10}, pix(0x246224), medium);
     task_1.save_as("task_1.bmp");
 
     canvas_2d task_2(1000, 1000, {-6, 6}, {-1, 11});
-    task_2.draw_axes(10.0);
+    task_2.draw_axes();
     task_2 << func_1var([](double x) { return x * x; }, pix(0x567EAF), medium, 0.01);
     task_2.save_as("task_2.bmp");
 
@@ -24,7 +26,7 @@ int main() {
     task_4.save_as("task_4.bmp");
 
     canvas_2d task_5(1000, 1000, {-8, 8}, {-8, 8});
-    task_5.draw_axes(15.0);
+    task_5.draw_axes();
     task_5 << func_para([](double t) { return euclid(1 + cos(t), sin(t)); }, {0, pi}, Red, thick, 0.01)
            << func_para([](double t) { return euclid(-1 + cos(t), sin(t)); }, {0, pi}, Red, thick, 0.01)
            << func_para([](double t) { return euclid(1 + cos(t), -t); }, {0, pi}, pix(0xFB7A2D), thick, 0.01)
@@ -39,6 +41,21 @@ int main() {
         [](point_3d p) { return HSV((1.0 - p.z) * 240.0, 1.0, 1.0); },
         0.1);
     task_6.save_as("task_6.bmp");
+
+    canvas_2d addi_1(1000, 1000, {-2 * pi, 2 * pi}, {-6, 6});
+    addi_1.draw_axes();
+    addi_1 << func_1var([](double x) { return tan(x); }, Blue, medium);
+    addi_1.save_as("addi_1.bmp");
+
+    canvas_2d addi_2(1000, 1000, {-1.5, 1.5}, {-1.5, 1.5});
+    addi_2.draw_axes();
+    addi_2 << func_polar([](double th) { return sin(1.3 * th); }, {0, 20 * pi}, Red, thin, 0.01);
+    addi_2.save_as("addi_2.bmp");
+
+    canvas_2d addi_3(1000, 1000, {-6, 6}, {-2, 2});
+    addi_3.draw_axes();
+    addi_3 << func_1var([](double x) { return sin(x * x); }, Black, thin, 0.01);
+    addi_3.save_as("addi_3.bmp");
 
     return 0;
 }
