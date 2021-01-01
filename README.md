@@ -44,6 +44,11 @@
 * HSV颜色支持
 * 通过面向对象实现的更加友好的用户接口
 
+## 使用的库
+
+* {fmt} <https://github.com/fmtlib/fmt> 用于替代低效的 sprintf  
+注：{fmt} 库即将在 c++20 标准中加入标准库，成为 std::format
+
 ## 展示视频
 
 `link`
@@ -70,7 +75,7 @@ g++ -Wall -O2 main.cpp -L./lib -lplot -o main.out
 
 ### Windows
 
-双击 `build_and_run_demo.bat`
+双击 `build_and_run_demo.bat`  
 这会编译并运行 `demo.cpp`
 
 ## 使用说明
