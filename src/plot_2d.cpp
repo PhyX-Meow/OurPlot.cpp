@@ -196,8 +196,11 @@ canvas_2d &operator<<(canvas_2d &target, func_polar r) {
 canvas_2d &operator<<(canvas_2d &target, func_para path) {
     pix color = path.color;
     double precis = path.precis;
-    for (double t = path.time.min; t < path.time.max + precis; t += precis)
-        target << line(path(t), path(t + precis), color, path.style);
+    double next;
+    for (double t = path.time.min; t < path.time.max; t += precis) {
+        next = std::min(t + precis, path.time.max);
+        target << line(path(t), path(next), color, path.style);
+    }
     return target;
 }
 
