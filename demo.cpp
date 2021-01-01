@@ -17,20 +17,20 @@ int main() {
 
     canvas_2d task_4(1000, 1000, {-3, 3}, {-4, 2});
     task_4.draw_axes();
-    task_4 << func_para([](double t) { return euclid(1 + cos(t), sin(t)); }, {0, pi}, Red, thick, 0.01);
-    task_4 << func_para([](double t) { return euclid(-1 + cos(t), sin(t)); }, {0, pi}, Red, thick, 0.01);
-    task_4 << func_para([](double t) { return euclid(1 + cos(t), -t); }, {0, pi}, pix(0xFB7A2D), thick, 0.01);
-    task_4 << func_para([](double t) { return euclid(-1 - cos(t), -t); }, {0, pi}, pix(0xFB7A2D), thick, 0.01);
+    task_4 << func_para([](double t) { return euclid(1 + cos(t), sin(t)); }, {0, pi}, Red, thick, 0.01)
+           << func_para([](double t) { return euclid(-1 + cos(t), sin(t)); }, {0, pi}, Red, thick, 0.01)
+           << func_para([](double t) { return euclid(1 + cos(t), -t); }, {0, pi}, pix(0xFB7A2D), thick, 0.01)
+           << func_para([](double t) { return euclid(-1 - cos(t), -t); }, {0, pi}, pix(0xFB7A2D), thick, 0.01);
     task_4.save_as("task_4.bmp");
 
     canvas_2d task_5(1000, 1000, {-8, 8}, {-8, 8});
     task_5.draw_axes(15.0);
-    task_5 << func_para([](double t) { return euclid(1 + cos(t), sin(t)); }, {0, pi}, Red, thick, 0.01);
-    task_5 << func_para([](double t) { return euclid(-1 + cos(t), sin(t)); }, {0, pi}, Red, thick, 0.01);
-    task_5 << func_para([](double t) { return euclid(1 + cos(t), -t); }, {0, pi}, pix(0xFB7A2D), thick, 0.01);
-    task_5 << func_para([](double t) { return euclid(-1 - cos(t), -t); }, {0, pi}, pix(0xFB7A2D), thick, 0.01);
-    task_5 << func_para([](double t) { return euclid(5 * cos(t) - 5 * sin(t) / sqrt(3), 5 * cos(t) + 5 * sin(t) / sqrt(3)); }, {-(2.0 / 3.0) * pi, pi / 3.0}, Black, medium, 0.01);
-    task_5 << func_para([](double t) { return euclid(-5 * cos(t) + 5 * sin(t) / sqrt(3), 5 * cos(t) + 5 * sin(t) / sqrt(3)); }, {-(2.0 / 3.0) * pi, pi / 3.0}, Black, medium, 0.01);
+    task_5 << func_para([](double t) { return euclid(1 + cos(t), sin(t)); }, {0, pi}, Red, thick, 0.01)
+           << func_para([](double t) { return euclid(-1 + cos(t), sin(t)); }, {0, pi}, Red, thick, 0.01)
+           << func_para([](double t) { return euclid(1 + cos(t), -t); }, {0, pi}, pix(0xFB7A2D), thick, 0.01)
+           << func_para([](double t) { return euclid(-1 - cos(t), -t); }, {0, pi}, pix(0xFB7A2D), thick, 0.01)
+           << func_para([](double t) { return euclid(5 * cos(t) - 5 * sin(t) / sqrt(3), 5 * cos(t) + 5 * sin(t) / sqrt(3)); }, {-(2.0 / 3.0) * pi, pi / 3.0}, Black, medium, 0.01)
+           << func_para([](double t) { return euclid(-5 * cos(t) + 5 * sin(t) / sqrt(3), 5 * cos(t) + 5 * sin(t) / sqrt(3)); }, {-(2.0 / 3.0) * pi, pi / 3.0}, Black, medium, 0.01);
     task_5.save_as("task_5.bmp");
 
     toy_3d task_6(1200, 900, 1.5);
