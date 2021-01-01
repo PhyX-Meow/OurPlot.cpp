@@ -276,7 +276,7 @@ void canvas_2d::draw_number(pix_pos base, double tick, int digits, axe_type type
     }
 }
 
-void canvas_2d::draw_axes() {
+void canvas_2d::draw_axes(double tick_ratio) {
     float_pos left{0.5 - origin.clm, 0}, right{width() - 0.5 - origin.clm, 0}, up{0, height() - 0.5 - origin.row}, down{0, 0.5 - origin.row};
 
     if (origin.clm >= 0 && origin.clm <= width())
@@ -284,7 +284,7 @@ void canvas_2d::draw_axes() {
     if (origin.row >= 0 && origin.row <= height())
         draw_line(down, up, Black, medium);
 
-    double tick_height{5.0}, tick_ratio{7.5};
+    double tick_height{5.0};
     double tick_x{get_tick(x.length(), tick_ratio) / step_x}, tick_y{get_tick(y.length(), tick_ratio) / step_y};
     double digit_x{get_digits(x.length(), tick_ratio)}, digit_y{get_digits(y.length(), tick_ratio)};
 
