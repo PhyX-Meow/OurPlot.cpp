@@ -70,7 +70,8 @@ g++ -Wall -O2 main.cpp -L./lib -lplot -o main.out
 
 ### Windows
 
-Working In Progress
+双击 `build_and_run_demo.bat`
+这会编译并运行 `demo.cpp`
 
 ## 使用说明
 
