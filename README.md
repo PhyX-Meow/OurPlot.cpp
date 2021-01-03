@@ -51,7 +51,7 @@
 
 ## 展示视频
 
-`link`
+<https://cloud.tsinghua.edu.cn/f/88b748c268b5416e8c37/>
 
 ## 编译说明
 
